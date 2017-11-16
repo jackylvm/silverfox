@@ -1,0 +1,28 @@
+# ----[ Visual Studio ]------- #
+/.idea/
+__pycache__/
+logs/
+*.suo
+*.user
+*.ncb
+*.plg
+*.opt
+*.aps
+*.aps
+*.sdf
+*.opensdf
+*.exp
+*.idb
+*.ilk
+*.exe
+*.pdb
+*.chw
+
+# -------------[ OS generated ]------------------------ #
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db
+
+*.pyc
+/db/db.sqlite3
