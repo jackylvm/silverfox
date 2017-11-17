@@ -26,3 +26,4 @@ Thumbs.db
 
 *.pyc
 /db/db.sqlite3
+/WebConsole/migrations/
