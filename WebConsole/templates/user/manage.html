@@ -1,0 +1,112 @@
+{% extends "base/base.html" %}
+{% load staticfiles %}
+
+{% block title %}账号管理{% endblock %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link href="/static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet"
+          type="text/css">
+    <link href="/static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet"
+          type="text/css">
+    <link href="/static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet"
+          type="text/css">
+    <link href="/static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet"
+          type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="right_col" role="main">
+        {% block right_col %}
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col col-lg-12 col-md-12 col-sm-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><span>账号管理</span></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <div class="btn-group" role="group" aria-label="...">
+                                    <button id="id_btn_add_user" class="btn btn-success" type="button">新建账号</button>
+                                </div>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <table id="id_table_users" class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>账号名</th>
+                                    <th>显示名</th>
+                                    <th>操作系统用户</th>
+                                    <th>操作系统UID</th>
+                                    <th>操 作</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block modal %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ block.super }}
+    <!-- Datatables -->
+    <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            {#控件初始化#}
+            $('.table').DataTable({
+                'deferRender': true,
+                'processing': true,
+                'ordering': true,
+            });
+
+            function queryUsers() {
+                alertify.message("查询账号");
+                $.post('/user/query/all',
+                    {},
+                    function (response, status) {
+                        if (response.success) {
+                            var datas = response.datas;
+                            var tableRoles = $('#id_table_users').DataTable();
+                            tableRoles.clear();
+                            $.each(datas, function (index, data) {
+                                tableRoles.row.add(data)
+                            });
+                            tableRoles.draw();
+                            alertify.success("查询账号成功");
+                        }
+                        else {
+                            alertify.error("查询账号失败");
+                        }
+                    });
+            }
+
+            queryUsers();
+
+            $('#id_btn_add_user').click(function (evt) {
+                {#让这个按钮直接跳转到django的后台#}
+                location.href = '/admin/WebConsole/authuser/add/';
+            });
+        });
+    </script>
+{% endblock %}

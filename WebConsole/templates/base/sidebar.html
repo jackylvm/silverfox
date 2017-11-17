@@ -1,0 +1,39 @@
+<div class="left_col scroll-view">
+    <div class="navbar nav_title" style="border: 0px;">
+        <a href="/index" class="site_title">
+            <i class="fa fa-spinner"></i>
+            <span>SilverFox</span>
+        </a>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="profile clearfix">
+        <div class="profile_pic">
+            <img src="/static/images/img.jpg" alt="..." class="img-circle profile_img"/>
+        </div>
+        <div class="profile_info">
+            <span>欢迎,</span>
+            <h2>{{ request.user.username }}</h2>
+        </div>
+    </div>
+
+    <br/>
+
+    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+        <div class="menu_section">
+            <ul class="nav side-menu">
+                {% if request.user.is_staff %}
+                    <li><a href="/user/manage"><i class="fa fa-user fa-lg"></i>用户管理</a></li>
+                {% else %}
+                    <li><a href="/server/cluster"><i class="fa fa-server fa-lg"></i>集群管理</a></li>
+                    <li><a href="/server/analysis"><i class="fa fa-line-chart fa-lg"></i>性能分析</a></li>
+                    <li><a href="/server/logview"><i class="fa fa-file-o fa-lg"></i>日志查看</a></li>
+                    <li><a href="/server/statediagram"><i class="fa fa-bar-chart fa-lg"></i>状态图</a></li>
+                    <li><a href="/server/console"><i class="fa fa-terminal fa-lg"></i>控制台</a></li>
+                    <li><a href="/server/watcher"><i class="fa fa-eye fa-lg"></i>实体查看</a></li>
+                    <li><a href="/server/spaceviewer"><i class="fa fa-tv fa-lg"></i>空间状态</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
