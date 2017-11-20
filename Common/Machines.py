@@ -2,9 +2,8 @@
 
 import random
 import socket
-import traceback
-
 import time
+import traceback
 
 host = ''  # Bind to all interfaces
 
@@ -218,7 +217,6 @@ class Machines:
         msg.writeUint16(socket.htons(self.replyPort))  # reply port
 
         datas = self.sendAndReceive(msg.build(), ip, trycount, timeout)
-        print("queryAllInterfaces", datas)
         self.parseQueryDatas(datas)
 
     def queryMachines(self, ip="<broadcast>", trycount=1, timeout=1):
@@ -296,7 +294,6 @@ class Machines:
         """
         """
         cinfo = ComponentInfo(recvData)
-        print("ParseQueryData ComponentInfo>>{}".format(cinfo.__dict__))
 
         componentInfos = self.interfaces.get(cinfo.componentType)
         if componentInfos is None:
