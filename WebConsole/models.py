@@ -17,4 +17,19 @@ class AuthUser(AbstractUser):
     objects = UserManager()
 
     class Meta:
+        """"""
+        app_label = "WebConsole"
+
+
+class ServerLayout(models.Model):
+    """
+    服务器运行配置表
+    """
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=128, default="", help_text="名称", db_index=True, unique=True)
+    sys_user = models.CharField(max_length=128, default="", help_text="系统账号")
+    config = models.TextField(max_length=32768, default="", help_text="配置(JSON)")
+
+    class Meta:
+        """"""
         app_label = "WebConsole"

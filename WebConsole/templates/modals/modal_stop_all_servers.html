@@ -1,0 +1,42 @@
+<!--模态对话框-->
+<div id="id_modal_stop_all_servers" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+     data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">停止组件</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col col-lg-12 col-md-12">
+                        <div class="col">
+                            <button type="button" class="btn btn-info btn-lg btn-block" disabled="disabled">
+                                正在停止服务器组件,必须等待结束...
+                            </button>
+                        </div>
+                        <div class="col">
+                            <table id="id_table_stop_all_servers_status"
+                                   class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>组件名称</th>
+                                    <th>未关闭组件</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col">
+                    <button id="id_btn_modal_stop_all_servers_finish" type="button"
+                            class="btn btn-success btn-lg btn-block" disabled="disabled"
+                            data-dismiss="modal">
+                        完 成
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

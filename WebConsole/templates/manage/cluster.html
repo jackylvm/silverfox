@@ -1,0 +1,536 @@
+{% extends "base/main.html" %}
+{% load staticfiles %}
+
+{% block title %}集群管理{% endblock %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link href="/static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet"
+          type="text/css">
+    <link href="/static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet"
+          type="text/css">
+    <link href="/static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet"
+          type="text/css">
+    <link href="/static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet"
+          type="text/css">
+    <link href="/static/vendors/Select-1.2.3/css/select.dataTables.min.css" rel="stylesheet"
+          type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="right_col" role="main">
+        {% block right_col %}
+            <div class="clearfix"></div>
+            <div class="row" role="tabpanel">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active" role="presentation">
+                        <a href="#id_div_server_manage" id="id_a_server_manage" data-toggle="tab">服务器管理</a>
+                    </li>
+                    <li class="" role="presentation">
+                        <a href="#id_div_server_run_config" id="id_a_server_run_config" data-toggle="tab">服务器运行配置</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div id="id_div_server_manage" class="tab-pane fade active in" role="tabpanel"
+                         aria-labelledby="id_a_server_manage">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <div class="col col-lg-2 col-md-2 col-sm-2">
+                                            <h3><span>守护进程</span></h3>
+                                        </div>
+                                        <div class="btn-group" role="group" aria-label="...">
+                                            <button id="id_btn_daemons_refresh" class="btn btn-success"
+                                                    type="button">刷新
+                                            </button>
+                                        </div>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li>
+                                                <a class="collapse-link">
+                                                    <i class="fa fa-chevron-up"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+                                        <table id="id_table_daemons" class="table table-striped table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>Machine</th>
+                                                <th>UID</th>
+                                                <th>CPU(%)</th>
+                                                <th>MEM(%)</th>
+                                                <th>pCPU(%)</th>
+                                                <th>pMEM(%)</th>
+                                                <th>totalMEM</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <div class="col col-lg-2 col-md-2 col-sm-2">
+                                            <h3><span>守护进程上的组件</span></h3>
+                                        </div>
+                                        <div class="btn-group" role="group" aria-label="...">
+                                            <button id="id_btn_servers_refresh" class="btn btn-success"
+                                                    type="button">刷新
+                                            </button>
+                                        </div>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <div class="btn-group" role="group" aria-label="...">
+                                                <button id="id_btn_servers_start_new" class="btn btn-success"
+                                                        type="button" data-toggle="modal"
+                                                        data-target="#id_modal_run_new_server">启动新组件
+                                                </button>
+                                                <button id="id_btn_servers_stop_all" class="btn btn-warning"
+                                                        type="button" data-toggle="modal"
+                                                        data-target="#id_modal_stop_all_servers">停止所有组件
+                                                </button>
+                                                <button id="id_btn_servers_save_config" class="btn btn-primary"
+                                                        type="button">保存运行配置
+                                                </button>
+                                            </div>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+                                        <table id="id_table_servers" class="table table-striped table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>Server</th>
+                                                <th>组件名</th>
+                                                <th>PID</th>
+                                                <th>类型</th>
+                                                <th>CID</th>
+                                                <th>GID</th>
+                                                <th>GUS</th>
+                                                <th>CPU负载</th>
+                                                <th>内存消耗</th>
+                                                <th>内存使用</th>
+                                                <th>实体数</th>
+                                                <th>Proxy</th>
+                                                <th>客户端数</th>
+                                                <th>操 作</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="id_div_server_run_config" class="tab-pane fade" role="tabpanel"
+                         aria-labelledby="id_a_server_run_config">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <div class="col col-lg-2 col-md-2 col-sm-2">
+                                            <h3><span>运行配置列表</span></h3>
+                                        </div>
+                                        <div class="btn-group" role="group" aria-label="...">
+                                            <button id="id_btn_run_config_refresh" class="btn btn-success"
+                                                    type="button">刷新
+                                            </button>
+                                        </div>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li>
+                                                <a class="collapse-link">
+                                                    <i class="fa fa-chevron-up"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+                                        <table id="id_table_configs" class="table table-striped table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>名 称</th>
+                                                <th>系统用户</th>
+                                                <th>CellApp</th>
+                                                <th>BaseApp</th>
+                                                <th>CellAppMgr</th>
+                                                <th>BaseAppMgr</th>
+                                                <th>LoginApp</th>
+                                                <th>DBMgr</th>
+                                                <th>Interfaces</th>
+                                                <th>Logger</th>
+                                                <th>操 作</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block modal %}
+    {% include "modals/modal_stop_all_servers.html" %}
+    {% include "modals/modal_run_new_server.html" %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ block.super }}
+    <!-- Datatables -->
+    <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <script src="/static/vendors/Select-1.2.3/js/dataTables.select.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            {#控件初始化#}
+            $('#id_table_components').DataTable({
+                'deferRender': true,
+                'processing': true,
+                'ordering': true,
+            });
+            $('#id_table_configs').DataTable({
+                'deferRender': true,
+                'processing': true,
+                'ordering': true,
+                'autoWidth': false,
+                "columns": [
+                    {"width": "15%"},
+                    {"width": "8%"},
+                    {"width": "7%"},
+                    {"width": "7%"},
+                    {"width": "7%"},
+                    {"width": "7%"},
+                    {"width": "7%"},
+                    {"width": "7%"},
+                    {"width": "7%"},
+                    {"width": "7%"},
+                    {"width": "7%"},
+                ],
+            });
+            $('#id_btn_daemons_refresh').click(function (evt) {
+                var table = $('#id_table_servers').DataTable();
+                table.clear().draw();
+                queryMachines();
+            });
+            $('#id_table_stop_all_servers_status').DataTable({
+                'paging': false,
+                'searching': false,
+                'info': false,
+                'ordering': false,
+            });
+
+            {#记录选中的machine#}
+            var selectMachine = null;
+            {#machines表格选中某个machine#}
+            var table = $('#id_table_daemons').DataTable(
+                {
+                    'deferRender': true,
+                    'processing': true,
+                    'ordering': true,
+                    select: true,
+                });
+            table.on('select', function (e, dt, type, indexes) {
+                selectMachine = table.rows(indexes).data().toArray()[0];
+                queryServers(selectMachine[0]);
+            }).on('deselect', function (e, dt, type, indexes) {
+                var rowData = table.rows(indexes).data().toArray()[0];
+                if (selectMachine == rowData) {
+                    selectMachine = null;
+                }
+            });
+
+            function queryMachines() {
+                var msg = "查询所有守护进程"
+                alertify.message(msg);
+                $.post('/cluster/query/machines',
+                    {},
+                    function (response, status) {
+                        if (response.success) {
+                            var datas = response.datas;
+                            var table = $('#id_table_daemons').DataTable();
+                            table.clear();
+                            var select = $('#id_select_server_ip');
+                            select.empty();
+                            $.each(datas, function (index, data) {
+                                table.row.add(data)
+                                var option = $('<option>').val(data[0]).text(data[0]);
+                                select.append(option);
+                            });
+                            table.draw();
+                            alertify.success(msg + "成功");
+                        }
+                        else {
+                            alertify.error(msg + "失败");
+                        }
+                    });
+            }
+
+            queryMachines();
+
+            $('#id_btn_servers_refresh').click(function (evt) {
+                if (selectMachine == null) {
+                    alertify.alert("必须选择一个守护进程");
+                }
+                else {
+                    queryServers(selectMachine[0])
+                }
+            });
+
+            function queryServers(machine) {
+                var msg = "查询所有服务器进程"
+                alertify.message(msg);
+                $.post('/cluster/query/servers',
+                    {
+                        target: machine
+                    },
+                    function (response, status) {
+                        if (response.success) {
+                            var datas = response.datas;
+                            var table = $('#id_table_servers').DataTable();
+                            table.clear();
+                            $.each(datas, function (index, data) {
+                                table.row.add(data)
+                            });
+                            table.draw();
+                            alertify.success(msg + "成功");
+                        }
+                        else {
+                            alertify.error(msg + "失败");
+                        }
+                    });
+            }
+
+            var stopUID = 0;
+            $('#id_btn_servers_stop_all').click(function (evt) {
+                if (null == selectMachine) {
+                    alertify.alert("必须选择一个守护进程");
+                }
+                else {
+                    stopUID = selectMachine[1];
+                    $('#id_btn_modal_stop_all_servers_finish').prop('disabled', true);
+                    $.post("/cluster/stop/all/servers",
+                        {
+                            uid: stopUID
+                        },
+                        function (response, status) {
+                            if (response.success) {
+                                fillServersStatusTable(response.datas);
+                                setTimeout(queryServersForStop, 2000);
+                            }
+                            else {
+                                alertify.alert("操作失败,请刷新页面!");
+                            }
+                        });
+                }
+            });
+
+            function queryServersForStop() {
+                $.post("/cluster/query/stop/servers/status",
+                    {
+                        uid: stopUID
+                    },
+                    function (response, status) {
+                        if (response.success) {
+                            fillServersStatusTable(response.datas);
+                            if (response.finish) {
+                                $('#id_btn_modal_stop_all_servers_finish').removeAttr('disabled');
+                            }
+                            else {
+                                setTimeout(queryServersForStop, 2000);
+                            }
+                        }
+                        else {
+                            $('#id_btn_modal_stop_all_servers_finish').removeAttr('disabled');
+                        }
+                    });
+            }
+
+            function fillServersStatusTable(datas) {
+                var table = $('#id_table_stop_all_servers_status').DataTable();
+                table.clear();
+                $.each(datas, function (index, data) {
+                    table.row.add(data);
+                });
+                table.draw();
+            }
+
+            $('#id_btn_modal_stop_all_servers_finish').click(function (evt) {
+                setTimeout(function () {
+                    queryServers(selectMachine[0]);
+                }, 1000);
+            });
+
+            $('#id_btn_start_run_submit').click(function (evt) {
+                var serverType = $('#id_select_server_type').val();
+                var serverIP = $('#id_select_server_ip').val();
+                var startCount = $('#id_input_start_count').val();
+                $.post("/cluster/run/new/server",
+                    {
+                        type: serverType,
+                        ip: serverIP,
+                        count: startCount
+                    },
+                    function (response, status) {
+                        $('#id_modal_run_new_server').modal('hide');
+                        if (response.success) {
+                            alertify.alert("启动成功,1分钟后可刷新页面查看状态!");
+                            queryServers(selectMachine[0]);
+                        } else {
+                            alertify.alert("启动失败," + response.error);
+                        }
+                    });
+            });
+
+            // (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
+            // (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
+            Date.prototype.Format = function (fmt) { //author: meizz
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "H+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+            $('#id_btn_servers_save_config').click(function (evt) {
+                alertify.prompt("提示", "为配置起一个名字", "RunConfig_" + (new Date()).Format("yyyy-MM-dd_HH-mm-ss"),
+                    function (evt, value) {
+                        $.post("/cluster/save/config",
+                            {
+                                time: (new Date()).valueOf(),
+                                name: value
+                            },
+                            function (response, status) {
+                                if (response.success) {
+                                    alertify.alert("保存成功");
+                                } else {
+                                    alertify.alert("保存失败," + response.error);
+                                }
+                            });
+                    },
+                    function () {
+                    });
+            });
+
+            $('#id_a_server_run_config').click(function (evt) {
+                queryRunConfigs();
+            });
+            $('#id_btn_run_config_refresh').click(function (evt) {
+                queryRunConfigs();
+            });
+
+            function queryRunConfigs() {
+                var msg = "查询运行配置"
+                alertify.message(msg);
+                $.post("/cluster/query/run/configs",
+                    {},
+                    function (response, status) {
+                        if (response.success) {
+                            var datas = response.datas;
+                            var table = $('#id_table_configs').DataTable();
+                            table.clear();
+                            $.each(datas, function (index, data) {
+                                table.row.add(data)
+                            });
+                            table.draw();
+                            alertify.success(msg + "成功!");
+                        }
+                        else {
+                            alertify.error(msg + "失败!");
+                        }
+                    });
+            }
+        });
+
+        function onStopServer(type, id, name) {
+            alertify.confirm("确定停止" + name + "?",
+                function () {
+                    $.post("/cluster/stop/server",
+                        {
+                            type: type,
+                            id: id
+                        },
+                        function (response, status) {
+                        });
+                },
+                function () {
+                });
+        }
+
+        function onKillServer(type, id, name) {
+            alertify.confirm("确定强制停止" + name + "?",
+                function () {
+                    $.post("/cluster/kill/server",
+                        {
+                            type: type,
+                            id: id
+                        },
+                        function (response, status) {
+                        });
+                },
+                function () {
+                });
+        }
+
+        function onDeleteConfig(id, name) {
+            alertify.confirm("确定删除" + name + "?",
+                function () {
+                    $.post("/cluster/delete/config",
+                        {
+                            id: id
+                        },
+                        function (response, status) {
+                            if (response.success) {
+                                alertify.success("删除成功!");
+                            } else {
+                                alertify.alert(response.error);
+                            }
+                        });
+                },
+                function () {
+                });
+        }
+
+        function onLoadConfig(id, name) {
+            alertify.confirm("确定加载" + name + "?",
+                function () {
+                    $.post("/cluster/load/config",
+                        {
+                            id: id
+                        },
+                        function (response, status) {
+                            if (response.success) {
+                                alertify.success("加载成功!");
+                            } else {
+                                alertify.alert(response.error);
+                            }
+                        });
+                },
+                function () {
+                });
+        }
+    </script>
+{% endblock %}

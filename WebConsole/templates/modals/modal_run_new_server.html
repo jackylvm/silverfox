@@ -1,0 +1,107 @@
+<!--模态对话框-->
+<div id="id_modal_run_new_server" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+     data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">启动服务进程</h4>
+            </div>
+            <div class="modal-body">
+                <form id="id_form_run_new_server" action="" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                               for="id_input_system_user">操作系统用户:</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="id_input_system_user" disabled="disabled"
+                                   class="form-control col-md-7 col-xs-12" value="{{ sys_user }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                               for="id_input_system_uid">操作系统UID:</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="id_input_system_uid" disabled="disabled"
+                                   class="form-control col-md-7 col-xs-12" value="{{ sys_uid }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                               for="id_input_kbe_root">KBE_ROOT:</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="id_input_kbe_root" disabled="disabled"
+                                   class="form-control col-md-7 col-xs-12" value="{{ kbe_root }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                               for="id_input_kbe_res_path">KBE_RES_PATH:</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <textarea id="id_textarea_kbe_res_path" disabled="disabled" rows="3"
+                                      class="form-control col-md-7 col-xs-12">{{ kbe_res_path }}
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                               for="id_input_kbe_bin_path">KBE_BIN_PATH:</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="id_input_kbe_bin_path" disabled="disabled"
+                                   class="form-control col-md-7 col-xs-12" value="{{ kbe_bin_path }}">
+                        </div>
+                    </div>
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                               for="id_select_server_type">进程类型:</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <select id="id_select_server_type" class="form-control col-md-7 col-xs-12"
+                                    style="width: 100%;">
+                                <option value="1" class="c_userid">dbmgr</option>
+                                <option value="2" class="c_userid">loginapp</option>
+                                <option value="3" class="c_userid">baseappmgr</option>
+                                <option value="4" class="c_userid">cellappmgr</option>
+                                <option value="5" class="c_userid">cellapp</option>
+                                <option value="6" selected class="c_userid">baseapp</option>
+                                <option value="10" class="c_userid">logger</option>
+                                <option value="11" class="c_userid">bots</option>
+                                <option value="13" class="c_userid">interfaces</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                               for="id_select_server_ip">运行的机器:</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <select id="id_select_server_ip" class="form-control col-md-7 col-xs-12"
+                                    style="width: 100%;">
+                                <option value="1" class="c_userid">dbmgr</option>
+                                <option value="2" class="c_userid">loginapp</option>
+                                <option value="3" class="c_userid">baseappmgr</option>
+                                <option value="4" class="c_userid">cellappmgr</option>
+                                <option value="5" class="c_userid">cellapp</option>
+                                <option value="6" selected class="c_userid">baseapp</option>
+                                <option value="10" class="c_userid">logger</option>
+                                <option value="11" class="c_userid">bots</option>
+                                <option value="13" class="c_userid">interfaces</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                               for="id_input_start_count">启动数量:</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="number" id="id_input_start_count" class="form-control col-md-7 col-xs-12"
+                                   value=1>
+                        </div>
+                    </div>
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <button id="id_btn_start_run_submit" type="button"
+                                class="btn btn-success btn-lg btn-block form-control">启 动
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
