@@ -81,7 +81,7 @@
                                                     type="button">刷新
                                             </button>
                                         </div>
-                                        <ul class="nav navbar-right panel_toolbox">
+                                        <div class="nav navbar-right panel_toolbox">
                                             <div class="btn-group" role="group" aria-label="...">
                                                 <button id="id_btn_servers_start_new" class="btn btn-success"
                                                         type="button" data-toggle="modal"
@@ -95,7 +95,7 @@
                                                         type="button">保存运行配置
                                                 </button>
                                             </div>
-                                        </ul>
+                                        </div>
                                         <div class="clearfix"></div>
                                     </div>
                                     <div class="x_content">
@@ -203,7 +203,7 @@
             $('#id_table_components').DataTable({
                 'deferRender': true,
                 'processing': true,
-                'ordering': true,
+                'ordering': true
             });
             $('#id_table_configs').DataTable({
                 'deferRender': true,
@@ -221,10 +221,10 @@
                     {"width": "7%"},
                     {"width": "7%"},
                     {"width": "7%"},
-                    {"width": "7%"},
-                ],
+                    {"width": "7%"}
+                ]
             });
-            $('#id_btn_daemons_refresh').click(function (evt) {
+            $('#id_btn_daemons_refresh').click(function () {
                 var table = $('#id_table_servers').DataTable();
                 table.clear().draw();
                 queryMachines();
@@ -233,7 +233,7 @@
                 'paging': false,
                 'searching': false,
                 'info': false,
-                'ordering': false,
+                'ordering': false
             });
 
             {#记录选中的machine#}
@@ -244,20 +244,20 @@
                     'deferRender': true,
                     'processing': true,
                     'ordering': true,
-                    select: true,
+                    select: true
                 });
             table.on('select', function (e, dt, type, indexes) {
                 selectMachine = table.rows(indexes).data().toArray()[0];
                 queryServers(selectMachine[0]);
             }).on('deselect', function (e, dt, type, indexes) {
                 var rowData = table.rows(indexes).data().toArray()[0];
-                if (selectMachine == rowData) {
+                if (selectMachine === rowData) {
                     selectMachine = null;
                 }
             });
 
             function queryMachines() {
-                var msg = "查询所有守护进程"
+                var msg = "查询所有守护进程";
                 alertify.message(msg);
                 $.post('/cluster/query/machines',
                     {},
@@ -269,7 +269,7 @@
                             var select = $('#id_select_server_ip');
                             select.empty();
                             $.each(datas, function (index, data) {
-                                table.row.add(data)
+                                table.row.add(data);
                                 var option = $('<option>').val(data[0]).text(data[0]);
                                 select.append(option);
                             });
@@ -284,8 +284,8 @@
 
             queryMachines();
 
-            $('#id_btn_servers_refresh').click(function (evt) {
-                if (selectMachine == null) {
+            $('#id_btn_servers_refresh').click(function () {
+                if (selectMachine === null) {
                     alertify.alert("必须选择一个守护进程");
                 }
                 else {
@@ -294,7 +294,7 @@
             });
 
             function queryServers(machine) {
-                var msg = "查询所有服务器进程"
+                var msg = "查询所有服务器进程";
                 alertify.message(msg);
                 $.post('/cluster/query/servers',
                     {
@@ -318,8 +318,8 @@
             }
 
             var stopUID = 0;
-            $('#id_btn_servers_stop_all').click(function (evt) {
-                if (null == selectMachine) {
+            $('#id_btn_servers_stop_all').click(function () {
+                if (null === selectMachine) {
                     alertify.alert("必须选择一个守护进程");
                 }
                 else {
@@ -371,13 +371,13 @@
                 table.draw();
             }
 
-            $('#id_btn_modal_stop_all_servers_finish').click(function (evt) {
+            $('#id_btn_modal_stop_all_servers_finish').click(function () {
                 setTimeout(function () {
                     queryServers(selectMachine[0]);
                 }, 1000);
             });
 
-            $('#id_btn_start_run_submit').click(function (evt) {
+            $('#id_btn_start_run_submit').click(function () {
                 var serverType = $('#id_select_server_type').val();
                 var serverIP = $('#id_select_server_ip').val();
                 var startCount = $('#id_input_start_count').val();
@@ -412,10 +412,11 @@
                 };
                 if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
                 for (var k in o)
-                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                    if (new RegExp("(" + k + ")").test(fmt))
+                        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
                 return fmt;
-            }
-            $('#id_btn_servers_save_config').click(function (evt) {
+            };
+            $('#id_btn_servers_save_config').click(function () {
                 alertify.prompt("提示", "为配置起一个名字", "RunConfig_" + (new Date()).Format("yyyy-MM-dd_HH-mm-ss"),
                     function (evt, value) {
                         $.post("/cluster/save/config",
@@ -435,15 +436,15 @@
                     });
             });
 
-            $('#id_a_server_run_config').click(function (evt) {
+            $('#id_a_server_run_config').click(function () {
                 queryRunConfigs();
             });
-            $('#id_btn_run_config_refresh').click(function (evt) {
+            $('#id_btn_run_config_refresh').click(function () {
                 queryRunConfigs();
             });
 
             function queryRunConfigs() {
-                var msg = "查询运行配置"
+                var msg = "查询运行配置";
                 alertify.message(msg);
                 $.post("/cluster/query/run/configs",
                     {},
