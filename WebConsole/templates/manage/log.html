@@ -1,0 +1,431 @@
+{% extends "base/main.html" %}
+{% load staticfiles %}
+
+{% block title %}日志查看{% endblock %}
+{% block stylesheets %}
+    {{ block.super }}
+    <!-- iCheck -->
+    <link href="/static/vendors/iCheck/skins/flat/green.css" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block content %}
+    <div class="right_col" role="main">
+        {% block right_col %}
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <div class="col col-lg-2 col-md-2 col-sm-2">
+                                <h3><span>查询选项</span></h3>
+                            </div>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li>
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="row">
+                                <div class="col-lg-3 col-xs-12">
+                                    <div class="x_panel">
+                                        <div class="x_title">
+                                            <p>进程选择:</p>
+                                        </div>
+                                        <div class="x_content">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-6 col-xs-6">
+                                                    <form class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_baseapp" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_baseapp">BaseApp</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_cellapp" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_cellapp">CellApp</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_baseappmgr" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label" for="id_checkbox_baseappmgr">BaseAppMgr</label>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-xs-6">
+                                                    <form class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_cellappmgr" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label" for="id_checkbox_cellappmgr">CellAppMgr</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_dbmgr" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_dbmgr">DBMgr</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_loginapp" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label" for="id_checkbox_loginapp">LoginApp</label>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-xs-12">
+                                    <div class="x_panel">
+                                        <div class="x_title">
+                                            <p>日志类型:</p>
+                                        </div>
+                                        <div class="x_content">
+                                            <div class="row">
+                                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                                    <form class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_critical" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label" for="id_checkbox_critical">Critical</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_debug" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_debug">Debug</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_error" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_error">Error</label>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                                    <form class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_info" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_info">Info</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_print" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_print">Print</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_warning" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_warning">Warning</label>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                                    <form class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_s_dbg" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_s_dbg">S_DBG</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_s_err" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_s_err">S_ERR</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_s_info" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_s_info">S_INFO</label>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                                    <form class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_s_norm" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_s_norm">S_NORM</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input id="id_checkbox_s_warn" type="checkbox"
+                                                                   class="flat input-checkbox" checked>
+                                                            <label class="form-label"
+                                                                   for="id_checkbox_s_warn">S_WARN</label>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-xs-12">
+                                    <div class="x_panel">
+                                        <div class="x_title">
+                                            <p>自定义搜索:</p>
+                                        </div>
+                                        <div class="x_content">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-xs-12">
+                                                    <form class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3 col-sm-3 col-xs-3"
+                                                                   for="id_input_global_order">GlobalOrder:</label>
+                                                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                                                <input id="id_input_global_order"
+                                                                       class="form-control col-md-9 col-xs-9"
+                                                                       type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3 col-sm-3 col-xs-3"
+                                                                   for="id_input_group_order">GroupOrder:</label>
+                                                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                                                <input id="id_input_group_order"
+                                                                       class="form-control col-md-9 col-xs-9"
+                                                                       type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3 col-sm-3 col-xs-3"
+                                                                   for="id_input_date">Date:</label>
+                                                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                                                <input id="id_input_date"
+                                                                       class="form-control col-md-9 col-xs-9"
+                                                                       type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3 col-sm-3 col-xs-3"
+                                                                   for="id_input_key_str">KeyStr:</label>
+                                                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                                                <input id="id_input_key_str"
+                                                                       class="form-control col-md-9 col-xs-9"
+                                                                       type="text">
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ln_solid"></div>
+                            <div class="row">
+                                <div class="col col-lg-10 col-md-10 col-xs-10">
+                                    <div class="nav navbar-right">
+                                        <div class="btn-group" role="group" aria-label="...">
+                                            <button id="id_btn_submit" class="btn btn-success" type="button">提 交
+                                            </button>
+                                            <button id="id_btn_close" class="btn btn-primary" type="button">关 闭</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <div class="col col-lg-2 col-md-2 col-sm-2">
+                                <h3><span>日志内容</span></h3>
+                            </div>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li>
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="row">
+                                <div class="col col-lg-12 col-md-12 col-xs-12">
+                                    <textarea id="id_textarea_logs" rows="16" style="width: 100%;" readonly="readonly">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ block.super }}
+    <!-- iCheck -->
+    <script src="/static/vendors/iCheck/icheck.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            window.web_socket = null;
+
+            $('.input-checkbox').iCheck({
+                checkedClass: 'checked'
+            });
+            {#$('#button').attr('disabled',"true");添加disabled属性#}
+            {#$('#button').removeAttr("disabled"); 移除disabled属性 #}
+            var btnSubmit = $('#id_btn_submit');
+            var btnClose = $('#id_btn_close');
+            btnSubmit.attr('disabled', "true");
+            btnClose.attr('disabled', "true");
+
+            btnSubmit.click(function () {
+                startWebsocket();
+            });
+            btnClose.click(function () {
+                if (window.web_socket) {
+                    window.web_socket.send("stop");
+                    window.web_socket.close();
+                }
+            });
+
+            {#var intaddr = '{{ intaddr }}';#}
+            {#var intport = {{ intport }};#}
+            var extaddr = '{{ extaddr }}';
+            var extport = {{ extport }};
+            var webaddr = '{{ webaddr }}';
+            var uid = {{ uid }};
+
+            function startWebsocket() {
+                if (window.web_socket) {
+                    window.web_socket.send("stop");
+                    window.web_socket.close();
+                }
+                var weburl = getWebURL();
+                var socket = new WebSocket(weburl);
+                socket.onopen = function () {
+                    btnSubmit.removeAttr('disabled');
+                    btnClose.removeAttr('disabled');
+                };
+                socket.onclose = function () {
+                    console.log("socket.onclose");
+                };
+                socket.onmessage = function (evt) {
+                    var textarea = $('#id_textarea_logs')[0];
+                    var value = textarea.value;
+                    {#原始格式的字符串是这样的b'    INFO    baseapp02 10103 7003  [2017-11-21 19:58:12 093] - Baseapp::onBackupEntityCellData: Realm(8002), 1 bytes.\n\x00'#}
+                    {#去除前面的b'和后面的\x00#}
+                    var data = evt.data.substr(3, evt.data.length - 4);
+                    value = value + data;
+                    textarea.value = value;
+                    {#滚动到最下面#}
+                    textarea.scrollTop = textarea.scrollHeight;
+                };
+                socket.onerror = function () {
+                    console.log("socket.onerror");
+                };
+                window.web_socket = socket;
+            }
+            startWebsocket();
+
+            function getWebURL() {
+                var url = "ws://" + webaddr + "/ws/log/query/logs?";
+                var opt = getOutputOption();
+                opt["extaddr"] = extaddr;
+                opt["extport"] = extport;
+                opt["uid"] = uid;
+                var ss = serialize(opt, null);
+                url = url + ss;
+                return url;
+            }
+
+            function getOutputOption() {
+                var opt = {};
+                var chk = $('input[id=id_checkbox_baseapp]')[0];
+                opt["baseapp"] = chk.checked ? 1 : 0;
+                chk = $('input[id=id_checkbox_cellapp]')[0];
+                opt["cellapp"] = chk.checked ? 1 : 0;
+                chk = $('input[id=id_checkbox_baseappmgr]')[0];
+                opt["baseappmgr"] = chk.checked ? 1 : 0;
+                chk = $('input[id=id_checkbox_cellappmgr]')[0];
+                opt["cellappmgr"] = chk.checked ? 1 : 0;
+                chk = $('input[id=id_checkbox_dbmgr]')[0];
+                opt["dbmgr"] = chk.checked ? 1 : 0;
+                chk = $('input[id=id_checkbox_loginapp]')[0];
+                opt["loginapp"] = chk.checked ? 1 : 0;
+
+                {#注意:下面的顺序不能调换#}
+                var logtype = 0;
+                chk = $('input[id=id_checkbox_s_norm]')[0];
+                logtype += chk.checked ? 1 : 0;
+                logtype = logtype << 1;
+                chk = $('input[id=id_checkbox_s_warn]')[0];
+                logtype += chk.checked ? 1 : 0;
+                logtype = logtype << 1;
+                chk = $('input[id=id_checkbox_s_dbg]')[0];
+                logtype += chk.checked ? 1 : 0;
+                logtype = logtype << 1;
+                chk = $('input[id=id_checkbox_s_err]')[0];
+                logtype += chk.checked ? 1 : 0;
+                logtype = logtype << 1;
+                chk = $('input[id=id_checkbox_s_info]')[0];
+                logtype += chk.checked ? 1 : 0;
+                logtype = logtype << 1;
+                chk = $('input[id=id_checkbox_critical]')[0];
+                logtype += chk.checked ? 1 : 0;
+                logtype = logtype << 1;
+                chk = $('input[id=id_checkbox_info]')[0];
+                logtype += chk.checked ? 1 : 0;
+                logtype = logtype << 1;
+                chk = $('input[id=id_checkbox_debug]')[0];
+                logtype += chk.checked ? 1 : 0;
+                logtype = logtype << 1;
+                chk = $('input[id=id_checkbox_warning]')[0];
+                logtype += chk.checked ? 1 : 0;
+                logtype = logtype << 1;
+                chk = $('input[id=id_checkbox_error]')[0];
+                logtype += chk.checked ? 1 : 0;
+                logtype = logtype << 1;
+                chk = $('input[id=id_checkbox_print]')[0];
+                logtype += chk.checked ? 1 : 0;
+                opt["logtype"] = logtype;
+
+                inpt = $('#id_input_global_order');
+                opt["global"] = inpt.val() ? inpt.val() : "";
+                inpt = $('#id_input_group_order');
+                opt["group"] = inpt.val() ? inpt.val() : "";
+                inpt = $('#id_input_date');
+                opt["date"] = inpt.val() ? inpt.val() : "";
+                inpt = $('#id_input_key_str');
+                opt["key"] = inpt.val() ? inpt.val() : "";
+                return opt;
+            }
+
+            function serialize(obj, prefix) {
+                var str = [], p;
+                for (p in obj) {
+                    if (obj.hasOwnProperty(p)) {
+                        var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+                        str.push((v !== null && typeof v === "object") ?
+                            serialize(v, k) :
+                            encodeURIComponent(k) + "=" + encodeURIComponent(v));
+                    }
+                }
+                return str.join("&");
+            }
+
+            $(window).on("beforeunload", function () {
+                if (window.web_socket) {
+                    window.web_socket.send("stop");
+                    window.web_socket.close();
+                }
+            });
+        });
+    </script>
+{% endblock %}
