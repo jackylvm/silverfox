@@ -11,9 +11,13 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# 把plugins目录添加到系统目录里面
+sys.path.append(os.path.join(BASE_DIR, 'plugins'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
@@ -67,6 +71,7 @@ TEMPLATES = [
         },
     },
 ]
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'WebConsole/templates'),)
 
 WSGI_APPLICATION = 'SilverFox.wsgi.application'
 
@@ -118,8 +123,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
-
-TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'WebConsole/templates'),)
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 # BOOL
