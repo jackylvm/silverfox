@@ -203,7 +203,9 @@ class LoggerWatcher:
 
                 ms = self.parseLog(msg)
                 if ms:
-                    callbackFunc(ms)
+                    ret = callbackFunc(ms)
+                    if not ret:
+                        break
                 continue
 
             if not loop:
