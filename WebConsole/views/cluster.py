@@ -133,17 +133,9 @@ def kill_server(request):
     return JsonResponse(datas)
 
 
-COMPS_FOR_SHUTDOWN = [
-    Define.BOTS_TYPE,
-    Define.LOGINAPP_TYPE,
-    Define.CELLAPP_TYPE,
-    Define.BASEAPP_TYPE,
-    Define.CELLAPPMGR_TYPE,
-    Define.BASEAPPMGR_TYPE,
-    Define.DBMGR_TYPE,
-    Define.INTERFACES_TYPE,
-    Define.LOGGER_TYPE,
-]
+COMPS_FOR_SHUTDOWN = {Define.BOTS_TYPE, Define.LOGINAPP_TYPE, Define.CELLAPP_TYPE, Define.BASEAPP_TYPE,
+                      Define.CELLAPPMGR_TYPE, Define.BASEAPPMGR_TYPE, Define.DBMGR_TYPE, Define.INTERFACES_TYPE,
+                      Define.LOGGER_TYPE}
 
 
 @login_required
@@ -245,16 +237,8 @@ def run_new_server(request):
     return JsonResponse(datas)
 
 
-VALID_CT = set([
-    Define.LOGGER_TYPE,
-    Define.INTERFACES_TYPE,
-    Define.DBMGR_TYPE,
-    Define.BASEAPPMGR_TYPE,
-    Define.CELLAPPMGR_TYPE,
-    Define.CELLAPP_TYPE,
-    Define.BASEAPP_TYPE,
-    Define.LOGINAPP_TYPE,
-])
+VALID_CT = {Define.LOGGER_TYPE, Define.INTERFACES_TYPE, Define.DBMGR_TYPE, Define.BASEAPPMGR_TYPE,
+            Define.CELLAPPMGR_TYPE, Define.CELLAPP_TYPE, Define.BASEAPP_TYPE, Define.LOGINAPP_TYPE}
 
 
 @login_required
