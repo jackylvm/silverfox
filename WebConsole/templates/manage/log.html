@@ -273,7 +273,7 @@
     <script src="/static/vendors/iCheck/icheck.min.js"></script>
     <script type="text/javascript">
         $(function () {
-            window.web_socket = null;
+            var wsocket = null;
 
             $('.input-checkbox').iCheck({
                 checkedClass: 'checked'
@@ -289,9 +289,9 @@
                 startWebsocket();
             });
             btnClose.click(function () {
-                if (window.web_socket) {
-                    window.web_socket.send("stop");
-                    window.web_socket.close();
+                if (wsocket) {
+                    wsocket.send("stop");
+                    wsocket.close();
                 }
             });
 
@@ -303,9 +303,9 @@
             var uid = {{ uid }};
 
             function startWebsocket() {
-                if (window.web_socket) {
-                    window.web_socket.send("stop");
-                    window.web_socket.close();
+                if (wsocket) {
+                    wsocket.send("stop");
+                    wsocket.close();
                 }
                 var weburl = getWebURL();
                 var socket = new WebSocket(weburl);
@@ -330,8 +330,9 @@
                 socket.onerror = function () {
                     console.log("socket.onerror");
                 };
-                window.web_socket = socket;
+                wsocket = socket;
             }
+
             startWebsocket();
 
             function getWebURL() {
@@ -421,9 +422,9 @@
             }
 
             $(window).on("beforeunload", function () {
-                if (window.web_socket) {
-                    window.web_socket.send("stop");
-                    window.web_socket.close();
+                if (wsocket) {
+                    wsocket.send("stop");
+                    wsocket.close();
                 }
             });
         });

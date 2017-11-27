@@ -19,6 +19,7 @@ def show(request):
     kbeComps = []
     for mID, comps in interfaces_groups.items():
         for comp in comps:
+            print(comp.__dict__)
             if comp.componentType in VALID_CT:
                 kbeComps.append(comp)
 
