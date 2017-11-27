@@ -1,0 +1,68 @@
+{% extends "base/main.html" %}
+{% load staticfiles %}
+
+{% block title %}控制台{% endblock %}
+{% block stylesheets %}
+    {{ block.super }}
+    <!-- Select2 -->
+    <link href="/static/vendors/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block content %}
+    <div class="right_col" role="main">
+        {% block right_col %}
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <div class="col col-lg-2 col-md-2 col-sm-4">
+                                <h3>
+                                    <span>控制台</span>
+                                </h3>
+                            </div>
+                            <div class="col col-lg-2 col-md-2 col-sm-4">
+                                <select id="id_select_components" style="width: 100%;">
+                                    <option value="">选择一个组件</option>
+                                    {% for comp in comps %}
+                                        <option value="{{ comp.0 }}">{{ comp.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li>
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-xs-12">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ block.super }}
+    <!-- Select2 -->
+    <script src="/static/vendors/select2/dist/js/select2.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var select = $('#id_select_components');
+            select.select2({
+                placeholder: '选择一个组件'
+            });
+            var select_component = null;
+            select.change(function () {
+                select_component = select.val();
+            });
+        });
+    </script>
+{% endblock %}
