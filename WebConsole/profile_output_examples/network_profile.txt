@@ -1,0 +1,32 @@
+password:welcome to dbmgr
+Version: 0.9.12. ScriptVersion: 0.1.0. Config: Debug. Built: 14:49:24 Sep 18 2017. AppID: 4000. UID: 10103. PID: 21252
+---------------------------------------------
+Command List:
+[:help          ]: list commands.
+[:quit          ]: quit the server.
+[:python        ]: python console.
+[:root          ]: return to the root layer.
+[:cprofile      ]: collects and reports the internal c++ profiles
+		of a server process over a period of time.
+		 usage: ":cprofile 30"
+[:pyprofile     ]: collects and reports the python profiles
+		of a server process over a period of time.
+		 usage: ":pyprofile 30"
+[:eventprofile  ]: a server process over a period of time,
+		collects and reports the all non-volatile cummunication
+		down to the client.
+		 usage: ":eventprofile 30"
+[:networkprofile]: collects and reports the network profiles
+		of a server process over a period of time.
+		 usage: ":networkprofile 30"
+
+
+---------------------------------------------
+[dbmgr@python ~] >>>
+[dbmgr@python ~] >>> Waiting for 10 secs.
+
+name	sent#	size	avg	total#	totalsize	recv#	size	avg	total#	totalsize
+Logger::writeLog	1	122	136	559	76248	0	0	0	0	0
+Dbmgr::lookApp	0	0	0	0	0	4	8	2	66	132
+
+[dbmgr@root ~]#

@@ -1,0 +1,45 @@
+password:
+welcome to cellapp
+Version: 0.9.12. ScriptVersion: 0.1.0. Config: Debug. Built: 14:49:24 Sep 18 2017. AppID: 8001. UID: 10103. PID: 18612
+---------------------------------------------
+Command List:
+[:help          ]: list commands.
+[:quit          ]: quit the server.
+[:python        ]: python console.
+[:root          ]: return to the root layer.
+[:cprofile      ]: collects and reports the internal c++ profiles
+		of a server process over a period of time.
+		 usage: ":cprofile 30"
+[:pyprofile     ]: collects and reports the python profiles
+		of a server process over a period of time.
+		 usage: ":pyprofile 30"
+[:eventprofile  ]: a server process over a period of time,
+		collects and reports the all non-volatile cummunication
+		down to the client.
+		 usage: ":eventprofile 30"
+[:networkprofile]: collects and reports the network profiles
+		of a server process over a period of time.
+		 usage: ":networkprofile 30"
+
+
+---------------------------------------------
+[cellapp@python ~] >>>
+[cellapp@python ~] >>> Waiting for 10 secs.
+
+ncalls	tottime	percall	cumtime	percall	filename:lineno(function)
+100	0.017	0.000	0.015	0.000	gameTick
+255	0.021	0.000	0.003	0.000	callSystemTimers
+0	0.000	0.000	0.000	0.000	scriptCall
+0	0.000	0.000	0.000	0.000	onMove
+0	0.000	0.000	0.000	0.000	onNavigate
+255	9.946	0.036	9.946	0.036	Idle
+0	0.000	0.000	0.000	0.000	clientUpdate
+100	0.000	0.000	0.000	0.000	callUpdates
+0	0.000	0.000	0.000	0.000	onTimer
+100	0.000	0.000	0.000	0.000	syncLog
+100	0.000	0.000	0.000	0.000	callScriptTimers
+100	0.002	0.000	0.002	0.000	processRecvMessages
+0	0.000	0.000	0.000	0.000	unpickle
+0	0.000	0.000	0.000	0.000	pickleEx
+
+[cellapp@root ~]#
