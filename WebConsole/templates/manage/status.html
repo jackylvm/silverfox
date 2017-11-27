@@ -1,0 +1,187 @@
+{% extends "base/main.html" %}
+{% load staticfiles %}
+
+{% block title %}服务进程状态{% endblock %}
+{% block stylesheets %}
+    {{ block.super }}
+    <!-- Select2 -->
+    <link href="/static/vendors/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block content %}
+    <div class="right_col" role="main">
+        {% block right_col %}
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <div class="col col-lg-2 col-md-2 col-sm-2">
+                                <h3>
+                                    <span>状态图</span>
+                                </h3>
+                            </div>
+                            <div class="col col-lg-2 col-md-2 col-sm-4">
+                                <select id="id_select_components" style="width: 100%;">
+                                    <option value="">选择一个组件</option>
+                                    {% for comp in comps %}
+                                        <option value="{{ comp.0 }}">{{ comp.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li>
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-xs-12">
+                                    <div id="id_div_echarts" class="col-lg-12 col-md-12 col-sm-12"
+                                         style="width: 100%;height: 600px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ block.super }}
+    <!--echarts-->
+    <script src="/static/vendors/echarts-3.8.5/dist/echarts.js"></script>
+    <script src="/static/vendors/echarts-3.8.5/theme/macarons.js"></script>
+    <!-- Select2 -->
+    <script src="/static/vendors/select2/dist/js/select2.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var wsocket = null;
+
+            var select = $('#id_select_components');
+            select.select2({
+                placeholder: '选择一个组件'
+            });
+            var select_component = null;
+            select.change(function () {
+                select_component = select.val();
+                startWebsocket(select_component);
+            });
+
+            var echartInit = false;
+            var seriesDatas = [];
+            var xAxisDatas = [];
+
+            var ec = $('#id_div_echarts')[0];
+            var echarts_status = echarts.init(ec, "macarons");
+
+            function startWebsocket(data) {
+                if (wsocket) {
+                    wsocket.send("stop");
+                    wsocket.close();
+                    wsocket = null;
+                }
+
+                var json = JSON.parse(data);
+                var wsurl = json['wsurl'];
+                var name = json['name'];
+
+                echartInit = false;
+
+                wsocket = new WebSocket(wsurl);
+                wsocket.onopen = function () {
+                    console.log("socket.onopen");
+                };
+                wsocket.onclose = function () {
+                    console.log("socket.onclose");
+                };
+                wsocket.onmessage = function (evt) {
+                    {#                    console.log(evt.data);#}
+                    if (echartInit) {
+                        fillECharts(evt.data);
+                    } else {
+                        echartInit = true;
+                        seriesDatas = [];
+                        xAxisDatas = [];
+                        initECharts(evt.data, name);
+                    }
+                };
+                wsocket.onerror = function () {
+                    console.log("socket.onerror");
+                };
+            }
+
+            function fillECharts(data) {
+                var jsn = JSON.parse(data);
+                var loads = jsn["load"];
+                for (var i = 0; i < loads.length; ++i) {
+                    seriesDatas[i]["data"].push(loads[i]);
+                }
+                xAxisDatas.push(jsn["timestamp"]);
+                var opt = {
+                    xAxis: [{
+                        type: 'category',
+                        data: xAxisDatas
+                    }],
+                    series: seriesDatas
+                }
+                echarts_status.setOption(opt);
+            }
+
+            function initECharts(data, name) {
+                var jsn = JSON.parse(data);
+                var comps = jsn["componentID"];
+                var loads = jsn["load"];
+                var legendData = [];
+                for (var i = 0; i < comps.length; ++i) {
+                    var comp = comps[i];
+                    var show = name + "[" + comp + "]";
+                    legendData.push(show);
+                    seriesDatas.push({
+                        name: show,
+                        type: 'line',
+                        smooth: true,
+                        data: [loads[i]]
+                    });
+                }
+
+                xAxisDatas.push(jsn["timestamp"]);
+
+                var opt = {
+                    title: {
+                        text: name
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: legendData
+                    },
+                    xAxis: [{
+                        type: 'category',
+                        data: xAxisDatas
+                    }],
+                    yAxis: [{
+                        type: 'value',
+                        splitArea: {
+                            show: true
+                        }
+                    }],
+                    series: seriesDatas
+                }
+                echarts_status.setOption(opt);
+            }
+
+            $(window).on("beforeunload", function () {
+                if (wsocket) {
+                    wsocket.send("stop");
+                    wsocket.close();
+                }
+            });
+        });
+    </script>
+{% endblock %}
