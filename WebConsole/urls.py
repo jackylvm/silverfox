@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 
-from WebConsole.views import views, users, cluster, log, status, profile
+from WebConsole.views import views, users, cluster, log, status, profile, console, watcher, space
 
 urlpatterns = [
     url(r'^$', views.index),
@@ -49,5 +49,7 @@ urlpatterns = [
     url(r'^profile/show', profile.show),
     url(r'^profile/query/components', profile.query_components),
 
-    url(r'^console/show', profile.show),
+    url(r'^console/show', console.show),
+    url(r'^watcher/show', watcher.show),
+    url(r'^space/show', space.show),
 ]
