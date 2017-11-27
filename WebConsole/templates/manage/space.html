@@ -1,0 +1,53 @@
+{% extends "base/main.html" %}
+{% load staticfiles %}
+
+{% block title %}空间展示{% endblock %}
+{% block stylesheets %}
+    {{ block.super }}
+{% endblock %}
+{% block content %}
+    <div class="right_col" role="main">
+        {% block right_col %}
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <div class="col col-lg-2 col-md-2 col-sm-4">
+                                <h3>
+                                    <span>Space</span>
+                                </h3>
+                            </div>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li>
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-xs-12">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ block.super }}
+    <!--echarts-->
+    <script src="/static/vendors/echarts-3.8.5/dist/echarts.js"></script>
+    <script src="/static/vendors/echarts-3.8.5/theme/macarons.js"></script>
+    <!-- Select2 -->
+    <script src="/static/vendors/select2/dist/js/select2.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+        });
+    </script>
+{% endblock %}
