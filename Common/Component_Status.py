@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from . import Define, MessageStream, ServerApp
+from Common import Define, MessageStream, ServerApp
 
 CONSOLE_PROFILECB_MSGID = 65503
 
@@ -35,7 +35,7 @@ class ComponentStatus(ServerApp.ServerApp):
         """
         ServerApp.ServerApp.__init__(self)
         self.registerMsg(CONSOLE_PROFILECB_MSGID, self.onComponentStatusMsg)
-        self.CSData = []
+        self.CSData = {}
         self.componentType = componentType
         assert componentType in CMD_ID_queryAppsLoads
 
