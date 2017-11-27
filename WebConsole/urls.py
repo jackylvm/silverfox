@@ -40,7 +40,7 @@ urlpatterns = [
     url(r'^cluster/delete/config', cluster.delete_config),
     url(r'^cluster/load/config', cluster.load_config),
 
-    url(r'^logview/show', log.show),
+    url(r'^log/show', log.show),
     url(r'^ws/log/query/logs', log.query_logs),
 
     url(r'^status/show', status.show),
