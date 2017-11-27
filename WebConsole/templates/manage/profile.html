@@ -1,0 +1,419 @@
+{% extends "base/main.html" %}
+{% load staticfiles %}
+
+{% block title %}性能分析{% endblock %}
+{% block stylesheets %}
+    {{ block.super }}
+    <!-- Select2 -->
+    <link href="/static/vendors/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block content %}
+    <div class="right_col" role="main">
+        {% block right_col %}
+            <div class="clearfix"></div>
+            <div class="row" role="tabpanel">
+                <ul id="id_ul_nav_tabs" class="nav nav-tabs bar_tabs" role="tablist">
+                    <li class="active" role="presentation">
+                        <a href="#id_div_tab_tickprofile" id="id_a_tickprofile" data-toggle="tab">TickProfile</a>
+                    </li>
+                    <li class="" role="presentation">
+                        <a href="#id_div_tab_cpprofile" id="id_a_cpprofile" data-toggle="tab">CPProfile</a>
+                    </li>
+                    <li class="" role="presentation">
+                        <a href="#id_div_tab_pyprofile" id="id_a_pyprofile" data-toggle="tab">PYProfile</a>
+                    </li>
+                    <li class="" role="presentation">
+                        <a href="#id_div_tab_eventprofile" id="id_a_eventprofile" data-toggle="tab">EventProfile</a>
+                    </li>
+                    <li class="" role="presentation">
+                        <a href="#id_div_tab_networkprofile" id="id_a_networkprofile"
+                           data-toggle="tab">NetworkProfile</a>
+                    </li>
+                </ul>
+                <div id="id_div_content" class="tab-content">
+                    <div id="id_div_tab_tickprofile" aria-labelledby="id_a_tickprofile" class="tab-pane fade active in"
+                         role="tabpanel">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <div class="col col-lg-2 col-md-2 col-sm-2">
+                                            <h3>
+                                                <span>TickProfile分析</span>
+                                            </h3>
+                                        </div>
+                                        <div class="col col-lg-2 col-md-2 col-sm-4">
+                                            <select id="id_select_tickprofile" style="width: 100%;">
+                                                <option value="">选择一个组件</option>
+                                                {% for val in pytick %}
+                                                    <option value="{{ val.0 }}">{{ val.1 }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6">
+                                            <form class="form-horizontal form-label-left" data-parsley-validate=""
+                                                  novalidate="">
+                                                <div class="form-group">
+                                                    <label class="control-label col-lg-4 col-md-4 col-sm-12"
+                                                           for="id_input_tickprofile">查询时长(单位:秒):</label>
+                                                    <div class="col-lg-3 col-md-3 col-sm-12">
+                                                        <input id="id_input_tickprofile"
+                                                               class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                               type="text" placeholder="默认10秒">
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-4 col-sm-12">
+                                                        <button id="id_btn_tickprofile" class="btn btn-success"
+                                                                type="button">
+                                                            连接组件
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li>
+                                                <a class="collapse-link">
+                                                    <i class="fa fa-chevron-up"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+                                        <table id="id_table_tickprofile" class="table table-striped table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>ncalls</th>
+                                                <th>tottime</th>
+                                                <th>percall</th>
+                                                <th>cumtime</th>
+                                                <th>percall</th>
+                                                <th>filename:lineno(function)</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="id_div_tab_cpprofile" aria-labelledby="id_a_cpprofile" class="tab-pane fade in"
+                         role="tabpanel">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <div class="col col-lg-2 col-md-2 col-sm-2">
+                                            <h3>
+                                                <span>CPProfile分析</span>
+                                            </h3>
+                                        </div>
+                                        <div class="col col-lg-2 col-md-2 col-sm-4">
+                                            <select id="id_select_cpprofile" style="width: 100%;">
+                                                <option value="">选择一个组件</option>
+                                                {% for val in cp %}
+                                                    <option value="{{ val.0 }}">{{ val.1 }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <form class="form-horizontal form-label-left" data-parsley-validate=""
+                                                  novalidate="">
+                                                <div class="form-group">
+                                                    <label class="control-label col-lg-4 col-md-4 col-sm-12"
+                                                           for="id_input_cpprofile">查询时长(单位:秒):</label>
+                                                    <div class="col-lg-3 col-md-3 col-sm-12">
+                                                        <input id="id_input_cpprofile"
+                                                               class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                               type="text" placeholder="默认10秒">
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-4 col-sm-12">
+                                                        <button id="id_btn_cpprofile" class="btn btn-success"
+                                                                type="button">
+                                                            连接组件
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li>
+                                                <a class="collapse-link">
+                                                    <i class="fa fa-chevron-up"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+                                        <table id="id_table_cpprofile" class="table table-striped table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>ncalls</th>
+                                                <th>tottime</th>
+                                                <th>percall</th>
+                                                <th>cumtime</th>
+                                                <th>percall</th>
+                                                <th>filename:lineno(function)</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="id_div_tab_pyprofile" aria-labelledby="id_a_pyprofile" class="tab-pane fade in"
+                         role="tabpanel">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <div class="col col-lg-2 col-md-2 col-sm-2">
+                                            <h3>
+                                                <span>PYProfile分析</span>
+                                            </h3>
+                                        </div>
+                                        <div class="col col-lg-2 col-md-2 col-sm-4">
+                                            <select id="id_select_pyprofile" style="width: 100%;">
+                                                <option value="">选择一个组件</option>
+                                                {% for val in py %}
+                                                    <option value="{{ val.0 }}">{{ val.1 }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <form class="form-horizontal form-label-left" data-parsley-validate=""
+                                                  novalidate="">
+                                                <div class="form-group">
+                                                    <label class="control-label col-lg-4 col-md-4 col-sm-12"
+                                                           for="id_input_pyprofile">查询时长(单位:秒):</label>
+                                                    <div class="col-lg-3 col-md-3 col-sm-12">
+                                                        <input id="id_input_pyprofile"
+                                                               class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                               type="text" placeholder="默认10秒">
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-4 col-sm-12">
+                                                        <button id="id_btn_pyprofile" class="btn btn-success"
+                                                                type="button">
+                                                            连接组件
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li>
+                                                <a class="collapse-link">
+                                                    <i class="fa fa-chevron-up"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+                                        <table id="id_table_pyprofile" class="table table-striped table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>ncalls</th>
+                                                <th>tottime</th>
+                                                <th>percall</th>
+                                                <th>cumtime</th>
+                                                <th>percall</th>
+                                                <th>filename:lineno(function)</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="id_div_tab_eventprofile" aria-labelledby="id_a_eventprofile"
+                         class="tab-pane fade in" role="tabpanel">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <div class="col col-lg-2 col-md-2 col-sm-2">
+                                            <h3>
+                                                <span>EventProfile分析</span>
+                                            </h3>
+                                        </div>
+                                        <div class="col col-lg-2 col-md-2 col-sm-4">
+                                            <select id="id_select_eventprofile" style="width: 100%;">
+                                                <option value="">选择一个组件</option>
+                                                {% for val in event %}
+                                                    <option value="{{ val.0 }}">{{ val.1 }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <form class="form-horizontal form-label-left" data-parsley-validate=""
+                                                  novalidate="">
+                                                <div class="form-group">
+                                                    <label class="control-label col-lg-4 col-md-4 col-sm-12"
+                                                           for="id_input_eventprofile">查询时长(单位:秒):</label>
+                                                    <div class="col-lg-3 col-md-3 col-sm-12">
+                                                        <input id="id_input_eventprofile"
+                                                               class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                               type="text" placeholder="默认10秒">
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-4 col-sm-12">
+                                                        <button id="id_btn_eventprofile" class="btn btn-success"
+                                                                type="button">
+                                                            连接组件
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li>
+                                                <a class="collapse-link">
+                                                    <i class="fa fa-chevron-up"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+                                        <table id="id_table_eventprofile" class="table table-striped table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>name</th>
+                                                <th>count</th>
+                                                <th>size</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="id_div_tab_networkprofile" aria-labelledby="id_a_networkprofile"
+                         class="tab-pane fade in" role="tabpanel">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <div class="col col-lg-2 col-md-2 col-sm-2">
+                                            <h3>
+                                                <span>NetworkProfile分析</span>
+                                            </h3>
+                                        </div>
+                                        <div class="col col-lg-2 col-md-2 col-sm-4">
+                                            <select id="id_select_networkprofile" style="width: 100%;">
+                                                <option value="">选择一个组件</option>
+                                                {% for val in cp %}
+                                                    <option value="{{ val.0 }}">{{ val.1 }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <form class="form-horizontal form-label-left" data-parsley-validate=""
+                                                  novalidate="">
+                                                <div class="form-group">
+                                                    <label class="control-label col-lg-4 col-md-4 col-sm-12"
+                                                           for="id_input_networkprofile">查询时长(单位:秒):</label>
+                                                    <div class="col-lg-3 col-md-3 col-sm-12">
+                                                        <input id="id_input_networkprofile"
+                                                               class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                               type="text" placeholder="默认10秒">
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-4 col-sm-12">
+                                                        <button id="id_btn_networkprofile" class="btn btn-success"
+                                                                type="button">连接组件
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li>
+                                                <a class="collapse-link">
+                                                    <i class="fa fa-chevron-up"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+                                        <table id="id_table_networkprofile" class="table table-striped table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>name</th>
+                                                <th>sent#</th>
+                                                <th>size</th>
+                                                <th>avg total#</th>
+                                                <th>totalsize</th>
+                                                <th>recv#</th>
+                                                <th>size</th>
+                                                <th>avg total#</th>
+                                                <th>totalsize</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ block.super }}
+    <!-- Datatables -->
+    <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <!-- Select2 -->
+    <script src="/static/vendors/select2/dist/js/select2.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            {#控件初始化#}
+            $('select').select2({
+                placeholder: '选择一个组件'
+            });
+            $('.table').DataTable({
+                'deferRender': true,
+                'processing': true,
+                'ordering': true
+            });
+
+            $('#id_select_tickprofile').change(function () {
+                var data = JSON.parse($(this).val());
+                console.log(data);
+            });
+            $('#id_select_cpprofile').change(function () {
+                var data = JSON.parse($(this).val());
+                console.log(data);
+            });
+            $('#id_select_pyprofile').change(function () {
+                var data = JSON.parse($(this).val());
+                console.log(data);
+            });
+            $('#id_select_eventprofile').change(function () {
+                var data = JSON.parse($(this).val());
+                console.log(data);
+            });
+            $('#id_select_networkprofile').change(function () {
+                var data = JSON.parse($(this).val());
+                console.log(data);
+            });
+        });
+    </script>
+{% endblock %}
