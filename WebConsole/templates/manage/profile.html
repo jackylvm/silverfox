@@ -31,7 +31,8 @@
                     </li>
                 </ul>
                 <div id="id_div_content" class="tab-content">
-                    <div id="id_div_tab_tickprofile" aria-labelledby="id_a_tickprofile" class="tab-pane fade active in"
+                    <div id="id_div_tab_tickprofile" aria-labelledby="id_a_tickprofile"
+                         class="tab-pane fade active in tab-panel"
                          role="tabpanel">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -43,6 +44,7 @@
                                             </h3>
                                         </div>
                                         <div class="col col-lg-2 col-md-2 col-sm-4">
+                                            <label for="id_select_tickprofile" hidden="hidden"></label>
                                             <select id="id_select_tickprofile" style="width: 100%;">
                                                 <option value="">选择一个组件</option>
                                                 {% for val in pytick %}
@@ -80,24 +82,37 @@
                                         <div class="clearfix"></div>
                                     </div>
                                     <div class="x_content">
-                                        <table id="id_table_tickprofile" class="table table-striped table-bordered">
-                                            <thead>
-                                            <tr>
-                                                <th>ncalls</th>
-                                                <th>tottime</th>
-                                                <th>percall</th>
-                                                <th>cumtime</th>
-                                                <th>percall</th>
-                                                <th>filename:lineno(function)</th>
-                                            </tr>
-                                            </thead>
-                                        </table>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-xs-12">
+                                                <div id="id_div_tickprofile_echarts"
+                                                     class="col-lg-12 col-md-12 col-sm-12"
+                                                     style="width: 100%;height: 200px;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="ln_solid"></div>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-xs-12">
+                                                <table id="id_table_tickprofile"
+                                                       class="table table-striped table-bordered">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>ncalls</th>
+                                                        <th>tottime</th>
+                                                        <th>percall</th>
+                                                        <th>cumtime</th>
+                                                        <th>percall</th>
+                                                        <th>filename:lineno(function)</th>
+                                                    </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="id_div_tab_cpprofile" aria-labelledby="id_a_cpprofile" class="tab-pane fade in"
+                    <div id="id_div_tab_cpprofile" aria-labelledby="id_a_cpprofile" class="tab-pane fade in tab-panel"
                          role="tabpanel">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -109,6 +124,7 @@
                                             </h3>
                                         </div>
                                         <div class="col col-lg-2 col-md-2 col-sm-4">
+                                            <label for="id_select_cpprofile" hidden="hidden"></label>
                                             <select id="id_select_cpprofile" style="width: 100%;">
                                                 <option value="">选择一个组件</option>
                                                 {% for val in cp %}
@@ -163,7 +179,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="id_div_tab_pyprofile" aria-labelledby="id_a_pyprofile" class="tab-pane fade in"
+                    <div id="id_div_tab_pyprofile" aria-labelledby="id_a_pyprofile" class="tab-pane fade in tab-panel"
                          role="tabpanel">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -175,6 +191,7 @@
                                             </h3>
                                         </div>
                                         <div class="col col-lg-2 col-md-2 col-sm-4">
+                                            <label for="id_select_pyprofile" hidden="hidden"></label>
                                             <select id="id_select_pyprofile" style="width: 100%;">
                                                 <option value="">选择一个组件</option>
                                                 {% for val in py %}
@@ -230,7 +247,7 @@
                         </div>
                     </div>
                     <div id="id_div_tab_eventprofile" aria-labelledby="id_a_eventprofile"
-                         class="tab-pane fade in" role="tabpanel">
+                         class="tab-pane fade in tab-panel" role="tabpanel">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="x_panel">
@@ -241,6 +258,7 @@
                                             </h3>
                                         </div>
                                         <div class="col col-lg-2 col-md-2 col-sm-4">
+                                            <label for="id_select_eventprofile" hidden="hidden"></label>
                                             <select id="id_select_eventprofile" style="width: 100%;">
                                                 <option value="">选择一个组件</option>
                                                 {% for val in event %}
@@ -293,7 +311,7 @@
                         </div>
                     </div>
                     <div id="id_div_tab_networkprofile" aria-labelledby="id_a_networkprofile"
-                         class="tab-pane fade in" role="tabpanel">
+                         class="tab-pane fade in tab-panel" role="tabpanel">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="x_panel">
@@ -304,6 +322,7 @@
                                             </h3>
                                         </div>
                                         <div class="col col-lg-2 col-md-2 col-sm-4">
+                                            <label for="id_select_networkprofile" hidden="hidden"></label>
                                             <select id="id_select_networkprofile" style="width: 100%;">
                                                 <option value="">选择一个组件</option>
                                                 {% for val in cp %}
@@ -365,6 +384,20 @@
         {% endblock %}
     </div>
 {% endblock %}
+{% block modal %}
+    <div id="id_modal_loading" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+         data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <h2 style="text-align: center;">正在从服务器读取数据...</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 {% block javascripts %}
     {{ block.super }}
     <!-- Datatables -->
@@ -382,6 +415,12 @@
     <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
     <!-- Select2 -->
     <script src="/static/vendors/select2/dist/js/select2.min.js"></script>
+    <!--echarts-->
+    <script src="/static/vendors/echarts-3.8.5/dist/echarts.js"></script>
+    <script src="/static/vendors/echarts-3.8.5/theme/macarons.js"></script>
+    <!--tools-->
+    <script src="/static/js/kbengine.js"></script>
+    <script src="/static/js/pytools.js"></script>
     <script type="text/javascript">
         $(function () {
             {#控件初始化#}
@@ -394,26 +433,262 @@
                 'ordering': true
             });
 
+            var echartInit = false;
+            var cmd = "";
+            var timerIDForTable = 0;
+            var timerIDForECharts = 0;
+
+            var ec = $('#id_div_tickprofile_echarts')[0];
+            var echarts_status = echarts.init(ec, "macarons");
+            initECharts();
+
+            var wsocket = null;
+            $('#id_btn_tickprofile').click(function () {
+                doBtnClick(this.innerText, '#id_select_tickprofile', '#id_input_tickprofile');
+            });
+            $('#id_btn_cpprofile').click(function () {
+                doBtnClick(this.innerText, '#id_select_cpprofile', '#id_input_cpprofile');
+            });
+            $('#id_btn_pyprofile').click(function () {
+                doBtnClick(this.innerText, '#id_select_pyprofile', '#id_input_pyprofile');
+            });
+            $('#id_btn_eventprofile').click(function () {
+                doBtnClick(this.innerText, '#id_select_eventprofile', '#id_input_eventprofile');
+            });
+            $('#id_btn_networkprofile').click(function () {
+                doBtnClick(this.innerText, '#id_select_networkprofile', '#id_input_networkprofile');
+            });
+
             $('#id_select_tickprofile').change(function () {
-                var data = JSON.parse($(this).val());
-                console.log(data);
+                closeWebSocket();
             });
             $('#id_select_cpprofile').change(function () {
-                var data = JSON.parse($(this).val());
-                console.log(data);
+                closeWebSocket();
             });
             $('#id_select_pyprofile').change(function () {
-                var data = JSON.parse($(this).val());
-                console.log(data);
+                closeWebSocket();
             });
             $('#id_select_eventprofile').change(function () {
-                var data = JSON.parse($(this).val());
-                console.log(data);
+                closeWebSocket();
             });
             $('#id_select_networkprofile').change(function () {
-                var data = JSON.parse($(this).val());
-                console.log(data);
+                closeWebSocket();
             });
+
+            function doBtnClick(html, selectId, iputId) {
+                if (html === "断开连接") {
+                    closeWebSocket();
+                }
+                else {
+                    var select = $(selectId).val();
+                    var input = $(iputId).val();
+                    initWebSocket(select, input);
+                }
+            }
+
+            function initWebSocket(select, input) {
+                if (select === '' || select === null || select === undefined || select.length === 0) {
+                    alertify.alert("必须选择一个组件!");
+                } else {
+                    if (input.isEmpty) {
+                        input = 10;
+                    }
+                    var interval = parseInt(input);
+                    if (isNaN(interval)) {
+                        interval = 10;
+                    }
+                    var data = JSON.parse(select);
+                    cmd = data["cmd"];
+                    var wsurl = data["wsurl"];
+                    wsurl = wsurl + "&sec=" + interval;
+                    startWebSocket(wsurl, interval);
+                }
+            }
+
+            function startWebSocket(wsurl, interval) {
+                closeWebSocket();
+
+                echartInit = false;
+
+                wsocket = new WebSocket(wsurl);
+                wsocket.onopen = function () {
+                    console.log("socket.onopen");
+                    KBEngine.resetPyTickProfileData();
+
+                    var time = interval * 1000 + 1000;
+                    timerIDForTable = setTimeout(fillTableData, time);
+
+                    timerIDForECharts = setInterval(fillECharts, 1000);
+
+                    var btn = getButtonByCMD(cmd);
+                    if (btn !== null) {
+                        btn.html("断开连接");
+                        btn.removeClass("btn-success");
+                        btn.addClass("btn-warning");
+                    }
+
+                    $('#id_modal_loading').modal("show");
+                };
+                wsocket.onclose = function () {
+                    console.log("socket.onclose");
+                    $('#id_modal_loading').modal("hide");
+                };
+                wsocket.onmessage = function (evt) {
+                    KBEngine.parsePyTickProfileData(evt.data, cmd);
+                };
+                wsocket.onerror = function () {
+                    console.log("socket.onerror");
+                    $('#id_modal_loading').modal("hide");
+                };
+            }
+
+            function closeWebSocket() {
+                if (wsocket) {
+                    wsocket.send("stop");
+                    wsocket.close();
+                }
+
+                if (0 !== timerIDForECharts) {
+                    clearInterval(timerIDForECharts);
+                    timerIDForECharts = 0;
+                }
+                if (0 !== timerIDForTable) {
+                    clearTimeout(timerIDForTable);
+                    timerIDForTable = 0;
+                }
+
+                var btn = getButtonByCMD(cmd);
+                if (btn) {
+                    btn.html("连接组件");
+                    btn.removeClass("btn-warning");
+                    btn.addClass("btn-success");
+                }
+
+                echartInit = false;
+                timerIDForTable = 0;
+                timerIDForECharts = 0;
+
+                $.data.pyTickProfileDatas = [];
+                fillTableData();
+            }
+
+            function fillTableData() {
+                var table = null;
+                if ("pytickprofile" === cmd) {
+                    table = $('#id_table_tickprofile').DataTable();
+                } else if ("cprofile" === cmd) {
+                    table = $('#id_table_cpprofile').DataTable();
+                } else if ("pyprofile" === cmd) {
+                    table = $('#id_table_pyprofile').DataTable();
+                } else if ("eventprofile" === cmd) {
+                    table = $('#id_table_eventprofile').DataTable();
+                } else if ("networkprofile" === cmd) {
+                    table = $('#id_table_networkprofile').DataTable();
+                }
+                if (null === table) {
+                    return;
+                }
+                table.clear();
+                for (var i = 0; i < $.data.pyTickProfileDatas.length; ++i) {
+                    var lines = $.data.pyTickProfileDatas[i]["lines"];
+                    for (var j = 0; j < lines.length; ++j) {
+                        table.row.add(lines[j]);
+                    }
+                }
+                table.draw();
+
+                $('#id_modal_loading').modal("hide");
+            }
+
+            function fillECharts() {
+                var xArr = [];
+                var yArr = [];
+                for (var i = 0; i < $.data.pyTickProfileDatas.length; ++i) {
+                    xArr.push(i);
+                    yArr.push($.data.pyTickProfileDatas[i].tottime);
+                }
+
+                if (null !== echarts_status) {
+                    echarts_status.setOption({
+                        xAxis: [{
+                            data: xArr
+                        }],
+                        series: [{
+                            data: yArr
+                        }]
+                    });
+                }
+            }
+
+            function initECharts() {
+                var legendData = ["组件Object响应时间"];
+                var seriesDatas = {
+                    name: "组件Object响应时间",
+                    type: 'line',
+                    smooth: true,
+                    data: []
+                };
+
+                var opt = {
+                    title: {
+                        text: name
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: legendData
+                    },
+                    xAxis: [{
+                        type: 'category',
+                        data: []
+                    }],
+                    yAxis: [{
+                        type: 'value',
+                        splitArea: {
+                            show: true
+                        }
+                    }],
+                    series: seriesDatas
+                };
+                echarts_status.setOption(opt);
+            }
+
+            $(window).on("beforeunload", function () {
+                closeWebSocket();
+            });
+
+            $('#id_a_tickprofile').click(function () {
+                closeWebSocket();
+            });
+            $('#id_a_cpprofile').click(function () {
+                closeWebSocket();
+            });
+            $('#id_a_pyprofile').click(function () {
+                closeWebSocket();
+            });
+            $('#id_a_eventprofile').click(function () {
+                closeWebSocket();
+            });
+            $('#id_a_networkprofile').click(function () {
+                closeWebSocket();
+            });
+
+            function getButtonByCMD(val) {
+                var btn = null;
+                if ("pytickprofile" === val) {
+                    btn = $('#id_btn_tickprofile');
+                } else if ("cprofile" === val) {
+                    btn = $('#id_btn_cpprofile');
+                } else if ("pyprofile" === val) {
+                    btn = $('#id_btn_pyprofile');
+                } else if ("eventprofile" === val) {
+                    btn = $('#id_btn_eventprofile');
+                } else if ("networkprofile" === val) {
+                    btn = $('#id_btn_networkprofile');
+                }
+                return btn;
+            }
         });
     </script>
 {% endblock %}
