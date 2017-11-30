@@ -50,6 +50,8 @@ urlpatterns = [
     url(r'^wc/profile/query/profile', profile.query_profile),
 
     url(r'^console/show', console.show),
+    url(r'^wc/console/open', console.console_open),
+
     url(r'^watcher/show', watcher.show),
     url(r'^space/show', space.show),
 ]

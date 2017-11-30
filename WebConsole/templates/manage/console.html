@@ -21,6 +21,7 @@
                                 </h3>
                             </div>
                             <div class="col col-lg-2 col-md-2 col-sm-4">
+                                <label for="id_select_components" hidden="hidden"></label>
                                 <select id="id_select_components" style="width: 100%;">
                                     <option value="">选择一个组件</option>
                                     {% for comp in comps %}
@@ -40,6 +41,27 @@
                         <div class="x_content">
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-xs-12">
+                                    <label for="id_textarea_console" hidden="hidden"></label>
+                                    <textarea id="id_textarea_console" rows="20" style="width: 70%;font-size: medium;"
+                                              readonly="readonly">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <div class="ln_solid"></div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-xs-12">
+                                    {#加onsubmit="return false;"是防止按回车键的时候刷新页面#}
+                                    <form class="form-horizontal form-label-left" data-parsley-validate=""
+                                          novalidate="" onsubmit="return false;">
+                                        <div class="form-group">
+                                            <label class="control-label col-lg-1 col-md-1 col-sm-12"
+                                                   for="id_input_console">输入命令:</label>
+                                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                                <input id="id_input_console" class="form-control typeahead"
+                                                       data-provide="typeahead" autocomplete="off">
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -53,8 +75,52 @@
     {{ block.super }}
     <!-- Select2 -->
     <script src="/static/vendors/select2/dist/js/select2.min.js"></script>
+    <!-- bootstrap3-typeahead -->
+    <script src="/static/vendors/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
+    <!--tools-->
+    <script src="/static/js/kbengine.js"></script>
     <script type="text/javascript">
         $(function () {
+            var typeaheadSource = [
+                {id: "1", name: "KBEngine"},
+                {id: "2", name: "KBEngine.entities"},
+                {id: "3", name: "Player"},
+                {id: "4", name: "Avatar"},
+                {id: "5", name: "Account"}
+            ];
+            $('.typeahead').typeahead({
+                source: typeaheadSource,
+                autoSelect: true
+            });
+
+            $('#id_textarea_console').val("");
+
+            var lastData = "";
+            var textareaData = "";
+            var input = $('#id_input_console');
+            input.keydown(function (evt) {
+                if (evt.keyCode === 13) {
+                    {#按下回车键#}
+                    var val = input.val();
+                    if ('' !== val) {
+                        if (wsocket !== null) {
+                            lastData = "";
+                            var textarea = $('#id_textarea_console')[0];
+                            textareaData = textarea.value;
+
+                            wsocket.send(val);
+                        }
+
+                        typeaheadSource.push(val);
+                        $('.typeahead').typeahead({
+                            source: typeaheadSource
+                        });
+
+                        input.val("");
+                    }
+                }
+            });
+
             var select = $('#id_select_components');
             select.select2({
                 placeholder: '选择一个组件'
@@ -62,7 +128,54 @@
             var select_component = null;
             select.change(function () {
                 select_component = select.val();
+                if (select_component === '' || select_component === null || select_component === undefined || select_component.length === 0) {
+                    alertify.alert("必须选择一个组件!");
+                } else {
+                    var data = JSON.parse(select_component);
+                    var wsurl = data["wsurl"];
+                    startWebSocket(wsurl);
+                }
             });
+
+            var wsocket = null;
+
+            function startWebSocket(wsurl, interval) {
+                closeWebSocket();
+
+                wsocket = new WebSocket(wsurl);
+                wsocket.onopen = function () {
+                    console.log("socket.onopen");
+                };
+                wsocket.onclose = function () {
+                    console.log("socket.onclose");
+                };
+                wsocket.onmessage = function (evt) {
+                    var data = evt.data;
+                    data = data.replace("\x1b[1;32m", "");
+                    data = data.replace("\x1b[0m", "");
+                    data = data.replace("\x1b[9999999999D", "");
+                    data = data.replace("\x1b[23C", "");
+                    data = data.replace("\x1b[22C", "");
+                    lastData = lastData + data;
+
+                    var tt = KBEngine.filterConsoleCmd(lastData);
+                    var textarea = $('#id_textarea_console')[0];
+                    textarea.value = textareaData + tt;
+
+                    {#滚动到最下面#}
+                    textarea.scrollTop = textarea.scrollHeight;
+                };
+                wsocket.onerror = function () {
+                    console.log("socket.onerror");
+                };
+            }
+
+            function closeWebSocket() {
+                if (wsocket) {
+                    wsocket.send("stop");
+                    wsocket.close();
+                }
+            }
         });
     </script>
 {% endblock %}

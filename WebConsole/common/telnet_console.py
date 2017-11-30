@@ -24,6 +24,7 @@ class TelnetConsole(object):
         self.host = host
         self.port = port
         self.consoleInst = None
+        self._receive = ""
 
     def close(self):
         """
@@ -85,13 +86,16 @@ class TelnetConsole(object):
         template method.
         当成功连接上telnet控制台时回调
         """
-        pass
+        self.consoleInst.write(b"sakura@moana.kbengine\r\n")
 
     def onReceivedConsoleData(self, data):
         """
         template method.
         当从telenet控制台收到了新数据以后回调
         """
+        # self._receive = "{}{}".format(self._receive, str(data, encoding="utf8"))
+        # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        # print(self._receive)
         self.wsInst.send(data)
         return True
 
@@ -100,8 +104,10 @@ class TelnetConsole(object):
         template method.
         当从客户端收到了新数据以后回调
         """
-        if data == ":quit":
+        if -1 != data.find(b'stop'):
             self.wsInst.close()
+            if self.consoleInst:
+                self.consoleInst.close()
             return False
         self.consoleInst.write(_pre_process_cmd(data))
         return True
@@ -119,7 +125,6 @@ class ProfileConsole(TelnetConsole):
         self.consoleInst = None
         self.cmd = command.encode('utf-8')
         self.sec = sec.encode('utf-8')
-        self._receive = ""
 
     def onConnectedToConsole(self):
         """
@@ -135,7 +140,6 @@ class ProfileConsole(TelnetConsole):
         当从telenet控制台收到了新数据以后回调
         """
         # print("onReceivedConsoleData", data)
-        self._receive = "{}{}".format(self._receive, str(data, encoding="utf8"))
         self.wsInst.send(data)
         return True
 
@@ -144,9 +148,7 @@ class ProfileConsole(TelnetConsole):
         template method.
         当从客户端收到了新数据以后回调
         """
-        print("onReceivedClientData>>>>>>>>", data)
         if -1 != data.find(b'stop'):
-            print("stop......................")
             self.wsInst.close()
             if self.consoleInst:
                 self.consoleInst.close()
