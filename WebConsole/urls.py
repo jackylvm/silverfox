@@ -47,7 +47,7 @@ urlpatterns = [
     url(r'^wc/status/query/status', status.query_status),
 
     url(r'^profile/show', profile.show),
-    url(r'^profile/query/components', profile.query_components),
+    url(r'^wc/profile/query/profile', profile.query_profile),
 
     url(r'^console/show', console.show),
     url(r'^watcher/show', watcher.show),
