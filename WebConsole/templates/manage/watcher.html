@@ -6,6 +6,19 @@
     {{ block.super }}
     <!-- Select2 -->
     <link href="/static/vendors/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css">
+    <!-- ztree,zTreeStyle.css里面的样式和custom.css里面的有冲突,只能用metroStyle.css -->
+    <link href="/static/vendors/zTree_v3/css/metroStyle/metroStyle.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        ul.ztree {
+            margin-top: 10px;
+            border: 1px solid #617775;
+            background: #fffffb;
+            width: 360px;
+            height: 560px;
+            overflow-y: scroll;
+            overflow-x: auto;
+        }
+    </style>
 {% endblock %}
 {% block content %}
     <div class="right_col" role="main">
@@ -15,10 +28,10 @@
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="x_panel">
                         <div class="x_title">
-                            <div class="col col-lg-2 col-md-2 col-sm-4">
-                                <h3>
+                            <div class="col col-lg-1 col-md-1 col-sm-2">
+                                <h2>
                                     <span>Wather</span>
-                                </h3>
+                                </h2>
                             </div>
                             <div class="col col-lg-2 col-md-2 col-sm-4">
                                 <select id="id_select_components" style="width: 100%;">
@@ -27,6 +40,10 @@
                                         <option value="{{ comp.0 }}">{{ comp.1 }}</option>
                                     {% endfor %}
                                 </select>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                <button id="id_btn_websocket_control" class="btn btn-success" type="button">断开连接
+                                </button>
                             </div>
                             <ul class="nav navbar-right panel_toolbox">
                                 <li>
@@ -39,7 +56,19 @@
                         </div>
                         <div class="x_content">
                             <div class="row">
-                                <div class="col-lg-12 col-md-12 col-xs-12">
+                                <div class=" col-lg-3 col-md-3 col-xs-5">
+                                    <ul id="id_ui_tree" class="ztree">
+                                    </ul>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-xs-8">
+                                    <table id="id_table_watcher" class="table table-striped table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>属性</th>
+                                            <th>变量</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -51,10 +80,80 @@
 {% endblock %}
 {% block javascripts %}
     {{ block.super }}
+    <!-- Datatables -->
+    <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
     <!-- Select2 -->
     <script src="/static/vendors/select2/dist/js/select2.min.js"></script>
+    <!-- ztree -->
+    <script src="/static/vendors/zTree_v3/js/jquery.ztree.core.min.js"></script>
     <script type="text/javascript">
         $(function () {
+            var wsurl = "";
+            var showTreeNode = null;
+            var selectTreeNodeChange = false;
+
+            var setting = {
+                view: {
+                    dblClickExpand: false,
+                    selectedMulti: false
+                },
+                data: {
+                    simpleData: {
+                        enable: true,
+                        idKey: "id",
+                        pIdKey: "pId",
+                        rootPId: ""
+                    }
+                },
+                callback: {
+                    onClick: function (evt, treeId, treeNode) {
+                    },
+                    onDblClick: function (evt, treeId, treeNode) {
+                        console.log(treeNode);
+                        if (wsurl === "") {
+                            alertify.alert("必须选择一个组件!");
+                        } else {
+                            showTreeNode = treeNode;
+                            selectTreeNodeChange = true;
+
+                            var key = "root";
+                            if (treeNode.id !== 1) {
+                                key = treeNode.value;
+                            }
+                            var wss = wsurl + "&key=" + key;
+                            console.log(wss);
+                            startWebSocket(wss);
+                        }
+                    }
+                }
+            };
+
+            var zNodes = [
+                {id: 1, pId: 0, name: "root,双击节点查询属性", value: "root"}
+            ];
+
+            var zTreeObj = $.fn.zTree.init($('#id_ui_tree'), setting, zNodes);
+
+            $('.table').DataTable({
+                'deferRender': true,
+                'processing': true,
+                'ordering': true
+            });
+            $('#id_btn_websocket_control').click(function () {
+                closeWebSocket();
+            });
+
             var select = $('#id_select_components');
             select.select2({
                 placeholder: '选择一个组件'
@@ -62,6 +161,109 @@
             var select_component = null;
             select.change(function () {
                 select_component = select.val();
+                if (select_component === '' || select_component === null || select_component === undefined || select_component.length === 0) {
+                    alertify.alert("必须选择一个组件!");
+                } else {
+                    var data = JSON.parse(select_component);
+                    wsurl = data["wsurl"];
+                }
+            });
+
+            var wsocket = null;
+
+            function startWebSocket(wsurl) {
+                closeWebSocket();
+
+                wsocket = new WebSocket(wsurl);
+                wsocket.onopen = function () {
+                    console.log("socket.onopen");
+                };
+                wsocket.onclose = function () {
+                    console.log("socket.onclose");
+                };
+                wsocket.onmessage = function (evt) {
+                    var data = evt.data.replace(/False/g, '\"False\"');
+                    data = data.replace(/True/g, '\"True\"');
+                    data = data.replace(/'/g, '\"');
+                    data = JSON.parse(data);
+                    if ('[{\'type\': 0, \'keys\': [], \'values\': {}, \'path\': \'\'}]' !== evt.data) {
+                        var first = data[0];
+                        if ("root/network/messages" === first["path"]) {
+                            if (selectTreeNodeChange) {
+                                if (data.length > 1) {
+                                    if (data[0]["keys"].length > 0) {
+                                        selectTreeNodeChange = false;
+
+                                        if (showTreeNode !== null) {
+                                            var showValue = showTreeNode.value;
+                                            var pid = showTreeNode.id;
+                                            var startId = pid * 100;
+                                            var newNodes = [];
+                                            var keys = data[0]["keys"];
+                                            for (var i = 0; i < keys.length; ++i) {
+                                                newNodes.push({
+                                                    id: startId + i,
+                                                    pId: pid,
+                                                    name: keys[i],
+                                                    value: showValue + "/" + keys[i]
+                                                })
+                                            }
+                                            zTreeObj.addNodes(showTreeNode, 0, newNodes, false);
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            var values = first["values"];
+                            var table = $('#id_table_watcher').DataTable();
+                            table.clear();
+                            console.log(values);
+                            for (var key in values) {
+                                table.row.add([key, values[key]]);
+                            }
+                            table.draw();
+
+                            if (selectTreeNodeChange) {
+                                if (data.length > 1) {
+                                    if (data[1]["keys"].length > 0) {
+                                        selectTreeNodeChange = false;
+
+                                        if (showTreeNode !== null) {
+                                            var showValue = showTreeNode.value;
+                                            var pid = showTreeNode.id;
+                                            var startId = pid * 100;
+                                            var newNodes = [];
+                                            var keys = data[1]["keys"];
+                                            for (var i = 0; i < keys.length; ++i) {
+                                                newNodes.push({
+                                                    id: startId + i,
+                                                    pId: pid,
+                                                    name: keys[i],
+                                                    value: showValue + "/" + keys[i]
+                                                })
+                                            }
+                                            zTreeObj.addNodes(showTreeNode, 0, newNodes, false);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+                wsocket.onerror = function () {
+                    console.log("socket.onerror");
+                };
+            }
+
+            function closeWebSocket() {
+                if (wsocket) {
+                    wsocket.send("stop");
+                    wsocket.close();
+                }
+            }
+
+            $(window).on("beforeunload", function () {
+                closeWebSocket();
             });
         });
     </script>
