@@ -176,6 +176,10 @@
                     wsocket.close();
                 }
             }
+
+            $(window).on("beforeunload", function () {
+                closeWebSocket();
+            });
         });
     </script>
 {% endblock %}

@@ -53,5 +53,7 @@ urlpatterns = [
     url(r'^wc/console/open', console.console_open),
 
     url(r'^watcher/show', watcher.show),
+    url(r'^wc/watcher/open', watcher.watcher_open),
+
     url(r'^space/show', space.show),
 ]
