@@ -86,7 +86,7 @@ class TelnetConsole(object):
         template method.
         当成功连接上telnet控制台时回调
         """
-        self.consoleInst.write(b"sakura@moana.kbengine\r\n")
+        self.consoleInst.write(b"kbe\r\n")
 
     def onReceivedConsoleData(self, data):
         """
@@ -131,7 +131,7 @@ class ProfileConsole(TelnetConsole):
         template method.
         当成功连接上telnet控制台时回调pytickprofile
         """
-        self.consoleInst.write(b"sakura@moana.kbengine\r\n")
+        self.consoleInst.write(b"kbe\r\n")
         self.consoleInst.write(b":" + self.cmd + b" " + self.sec + b"\r\n")
 
     def onReceivedConsoleData(self, data):
