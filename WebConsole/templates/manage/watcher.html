@@ -34,6 +34,7 @@
                                 </h2>
                             </div>
                             <div class="col col-lg-2 col-md-2 col-sm-4">
+                                <label for="id_select_components" hidden="hidden"></label>
                                 <select id="id_select_components" style="width: 100%;">
                                     <option value="">选择一个组件</option>
                                     {% for comp in comps %}
@@ -57,10 +58,9 @@
                         <div class="x_content">
                             <div class="row">
                                 <div class=" col-lg-3 col-md-3 col-xs-5">
-                                    <ul id="id_ui_tree" class="ztree">
-                                    </ul>
+                                    <ul id="id_ul_tree" class="ztree"></ul>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-xs-8">
+                                <div class="col-lg-6 col-md-6 col-xs-7">
                                     <table id="id_table_watcher" class="table table-striped table-bordered">
                                         <thead>
                                         <tr>
@@ -120,7 +120,6 @@
                     onClick: function (evt, treeId, treeNode) {
                     },
                     onDblClick: function (evt, treeId, treeNode) {
-                        console.log(treeNode);
                         if (wsurl === "") {
                             alertify.alert("必须选择一个组件!");
                         } else {
@@ -132,7 +131,6 @@
                                 key = treeNode.value;
                             }
                             var wss = wsurl + "&key=" + key;
-                            console.log(wss);
                             startWebSocket(wss);
                         }
                     }
@@ -143,7 +141,7 @@
                 {id: 1, pId: 0, name: "root,双击节点查询属性", value: "root"}
             ];
 
-            var zTreeObj = $.fn.zTree.init($('#id_ui_tree'), setting, zNodes);
+            var zTreeObj = $.fn.zTree.init($('#id_ul_tree'), setting, zNodes);
 
             $('.table').DataTable({
                 'deferRender': true,
@@ -196,14 +194,13 @@
 
                                         if (showTreeNode !== null) {
                                             var showValue = showTreeNode.value;
-                                            var pid = showTreeNode.id;
-                                            var startId = pid * 100;
+                                            var startId = showTreeNode.id * 100;
                                             var newNodes = [];
                                             var keys = data[0]["keys"];
                                             for (var i = 0; i < keys.length; ++i) {
                                                 newNodes.push({
                                                     id: startId + i,
-                                                    pId: pid,
+                                                    pId: showTreeNode.id,
                                                     name: keys[i],
                                                     value: showValue + "/" + keys[i]
                                                 })
@@ -217,7 +214,6 @@
                             var values = first["values"];
                             var table = $('#id_table_watcher').DataTable();
                             table.clear();
-                            console.log(values);
                             for (var key in values) {
                                 table.row.add([key, values[key]]);
                             }
@@ -229,15 +225,14 @@
                                         selectTreeNodeChange = false;
 
                                         if (showTreeNode !== null) {
-                                            var showValue = showTreeNode.value;
-                                            var pid = showTreeNode.id;
-                                            var startId = pid * 100;
-                                            var newNodes = [];
-                                            var keys = data[1]["keys"];
-                                            for (var i = 0; i < keys.length; ++i) {
+                                            showValue = showTreeNode.value;
+                                            startId = showTreeNode.id * 100;
+                                            newNodes = [];
+                                            keys = data[1]["keys"];
+                                            for (i = 0; i < keys.length; ++i) {
                                                 newNodes.push({
                                                     id: startId + i,
-                                                    pId: pid,
+                                                    pId: showTreeNode.id,
                                                     name: keys[i],
                                                     value: showValue + "/" + keys[i]
                                                 })

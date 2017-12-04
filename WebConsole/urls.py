@@ -56,4 +56,6 @@ urlpatterns = [
     url(r'^wc/watcher/open', watcher.watcher_open),
 
     url(r'^space/show', space.show),
+    url(r'^wc/space/mgr/open', space.mgr_open),
+    url(r'^wc/space/cell/open', space.cell_open),
 ]

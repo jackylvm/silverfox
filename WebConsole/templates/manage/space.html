@@ -4,11 +4,28 @@
 {% block title %}空间展示{% endblock %}
 {% block stylesheets %}
     {{ block.super }}
+    <!-- ztree,zTreeStyle.css里面的样式和custom.css里面的有冲突,只能用metroStyle.css -->
+    <link href="/static/vendors/zTree_v3/css/metroStyle/metroStyle.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        ul.ztree {
+            margin-top: 10px;
+            border: 1px solid #617775;
+            background: #fffffb;
+            width: 240px;
+            height: 580px;
+            overflow-y: scroll;
+            overflow-x: auto;
+        }
+    </style>
 {% endblock %}
 {% block content %}
     <div class="right_col" role="main">
         {% block right_col %}
             <div class="clearfix"></div>
+            {% for cell in cells %}
+                <label id="id_label_{{ cell.0 }}" cellID="{{ cell.0 }}" wsurl="{{ cell.1|safe }}"
+                       hidden="hidden"></label>
+            {% endfor %}
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="x_panel">
@@ -17,6 +34,10 @@
                                 <h3>
                                     <span>Space</span>
                                 </h3>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                <button id="id_btn_websocket_control" class="btn btn-success" type="button">未连接
+                                </button>
                             </div>
                             <ul class="nav navbar-right panel_toolbox">
                                 <li>
@@ -29,7 +50,15 @@
                         </div>
                         <div class="x_content">
                             <div class="row">
-                                <div class="col-lg-12 col-md-12 col-xs-12">
+                                <div class="col-lg-1 col-md-1 col-xs-2">
+                                    <ul id="id_ul_tree" class="ztree"></ul>
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-xs-2">
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-xs-8">
+                                    <div id="id_div_space_echarts"
+                                         class="col-lg-12 col-md-12 col-sm-12"
+                                         style="width: 100%;height: 660px;"></div>
                                 </div>
                             </div>
                         </div>
@@ -46,8 +75,284 @@
     <script src="/static/vendors/echarts-3.8.5/theme/macarons.js"></script>
     <!-- Select2 -->
     <script src="/static/vendors/select2/dist/js/select2.min.js"></script>
+    <!-- ztree -->
+    <script src="/static/vendors/zTree_v3/js/jquery.ztree.core.min.js"></script>
+    <!--echarts-->
+    <script src="/static/vendors/echarts-3.8.5/dist/echarts.js"></script>
+    <script src="/static/vendors/echarts-3.8.5/theme/macarons.js"></script>
     <script type="text/javascript">
         $(function () {
+            var cellMgrWSUrl = '{{ cellMgrWSUrl|safe }}';
+
+            {#初始化ztree#}
+            var setting = {
+                view: {
+                    dblClickExpand: false,
+                    selectedMulti: false
+                },
+                data: {
+                    simpleData: {
+                        enable: true,
+                        idKey: "id",
+                        pIdKey: "pId",
+                        rootPId: ""
+                    }
+                },
+                callback: {
+                    onClick: function (evt, treeId, treeNode) {
+                    },
+                    onDblClick: function (evt, treeId, treeNode) {
+                        {#只有在双击节点的时候才连接websocket#}
+                        {#查看key: 2的位置#}
+                        if (treeNode.key === 2) {
+                            var spaceID = treeNode.spaceID;
+                            var cellID = treeNode.cellID;
+                            startSpaceWSSocket(spaceID, cellID);
+                        }
+                    }
+                }
+            };
+
+            {#ztree根节点#}
+            var zNodes = [
+                {id: 1, pId: 0, name: "root,双击节点查询属性", value: "root", key: 0}
+            ];
+            {#ztree创建#}
+            var zTreeObj = $.fn.zTree.init($('#id_ul_tree'), setting, zNodes);
+
+            {#一个按钮,可以断开连接的websocket#}
+            var controlBtn = $('#id_btn_websocket_control');
+            controlBtn.click(function () {
+                closeWebSocket();
+            });
+
+            var wsocket = null;
+            {#页面加载完成后,首先获取ztree的节点#}
+            startCellMgrWSSocket();
+
+            function startCellMgrWSSocket() {
+                closeWebSocket();
+
+                wsocket = new WebSocket(cellMgrWSUrl);
+                wsocket.onopen = function () {
+                    console.log("socket.onopen");
+                    if (controlBtn) {
+                        controlBtn.html("断开连接");
+                        controlBtn.removeClass("btn-success");
+                        controlBtn.addClass("btn-warning");
+                    }
+                };
+                wsocket.onclose = function () {
+                    console.log("socket.onclose");
+                    if (controlBtn) {
+                        controlBtn.html("未连接");
+                        controlBtn.removeClass("btn-warning");
+                        controlBtn.addClass("btn-success");
+                    }
+                };
+                wsocket.onmessage = function (evt) {
+                    var objs = JSON.parse(evt.data);
+                    var newNodes = [];
+                    var cells = objs['cellapp'];
+                    if (cells) {
+                        var ztreeID = 101;
+                        var index = 0;
+                        {#根据收到的数据,创建ztree的子节点#}
+                        for (var key in cells) {
+                            var cell = cells[key];
+                            var id = ztreeID + index;
+                            index++;
+                            {#第一层子节点,表示每个cell#}
+                            newNodes.push({
+                                id: id,
+                                pId: 1,
+                                name: "cell(" + key + ")",
+                                key: 1
+                            });
+                            var spaceSize = cell["SpacesSize"];
+                            var spaces = cell["SpaceID"];
+                            var i = 0;
+                            for (var kk in spaces) {
+                                var space = spaces[kk];
+                                var name = space["SpacePath"].split('/');
+                                {#第二次子节点,表示每个cell上的space#}
+                                newNodes.push({
+                                    id: id * 10 + i,
+                                    pId: id,
+                                    name: name[name.length - 1],
+                                    key: 2,
+                                    spaceID: kk,
+                                    cellID: key
+                                });
+                                ++i;
+                            }
+                        }
+                        {#获取root节点,把数据插入的根节点#}
+                        var node = zTreeObj.getNodeByTId("1");
+                        zTreeObj.addNodes(node, 0, newNodes, false);
+                    } else {
+                        alertify.alert("数据不对,未找到cell!");
+                    }
+                };
+                wsocket.onerror = function () {
+                    console.log("socket.onerror");
+                    if (controlBtn) {
+                        controlBtn.html("未连接");
+                        controlBtn.removeClass("btn-warning");
+                        controlBtn.addClass("btn-success");
+                    }
+                };
+            }
+
+            var allEnities = [];
+
+            function startSpaceWSSocket(spaceID, cellID) {
+                {#连接cell的websocket,获取空间里面实体分布#}
+                closeWebSocket();
+
+                var label = $("#id_label_" + cellID)[0];
+                if (label) {
+                    var wsurl = label.attributes["wsurl"].value;
+                    wsurl = wsurl + "&spaceID=" + spaceID;
+                    wsocket = new WebSocket(wsurl);
+                    wsocket.onopen = function () {
+                        console.log("socket.onopen");
+                        allEnities = [];
+                        initECharts();
+                        if (controlBtn) {
+                            controlBtn.html("断开连接");
+                            controlBtn.removeClass("btn-success");
+                            controlBtn.addClass("btn-warning");
+                        }
+                    };
+                    wsocket.onclose = function () {
+                        console.log("socket.onclose");
+                        if (controlBtn) {
+                            controlBtn.html("未连接");
+                            controlBtn.removeClass("btn-warning");
+                            controlBtn.addClass("btn-success");
+                        }
+                    };
+                    wsocket.onmessage = function (evt) {
+                        showSpace(evt.data);
+                    };
+                    wsocket.onerror = function () {
+                        console.log("socket.onerror");
+                        if (controlBtn) {
+                            controlBtn.html("未连接");
+                            controlBtn.removeClass("btn-warning");
+                            controlBtn.addClass("btn-success");
+                        }
+                    };
+                } else {
+                    alertify.alert("数据错误,请刷新页面重试!");
+                }
+            }
+
+            function showSpace(datas) {
+                {#填充echarts#}
+                var objCell = JSON.parse(datas);
+                var SpaceEntity = objCell["spaceEntity"];
+                if (!SpaceEntity || SpaceEntity.length < 1) {
+                    return;
+                }
+                for (var key in SpaceEntity) {
+                    var entity = SpaceEntity[key];
+                    var point = [entity["position_X"], entity["position_Z"], key, entity["pEntity"]];
+                    {#过滤掉重复的#}
+                    for (var kk in allEnities) {
+                        if (key === allEnities[kk][2]) {
+                            allEnities.splice(kk, 1);
+                            break;
+                        }
+                    }
+                    {#去除在0点的#}
+                    if (entity["position_X"] !== entity["position_Z"] !== 0) {
+                        allEnities.push(point);
+                    }
+                }
+                var option = {
+                    series: {
+                        data: allEnities
+                    }
+                };
+                echarts_space.setOption(option);
+            }
+
+            function closeWebSocket() {
+                if (wsocket) {
+                    wsocket.send("stop");
+                    wsocket.close();
+                }
+            }
+
+            $(window).on("beforeunload", function () {
+                closeWebSocket();
+            });
+
+            var ec = $('#id_div_space_echarts')[0];
+            {#创建echarts#}
+            var echarts_space = echarts.init(ec, "macarons");
+
+            function initECharts() {
+                {#初始化echarts#}
+                var option = {
+                    title: {
+                        text: 'Space View'
+                    },
+                    legend: {
+                        right: 10,
+                        data: ['实体']
+                    },
+                    xAxis: {
+                        splitLine: {
+                            lineStyle: {
+                                type: 'dashed'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        splitLine: {
+                            lineStyle: {
+                                type: 'dashed'
+                            }
+                        },
+                        scale: true
+                    },
+                    series: {
+                        name: '实体',
+                        data: [],
+                        type: 'scatter',
+                        {#标记的大小，可以设置成诸如 10 这样单一的数字，也可以用数组分开表示宽和高，例如 [20, 10] 表示标记宽为20，高为10。#}
+                        symbolSize: 8,
+                        label: {
+                            emphasis: {
+                                show: true,
+                                formatter: function (param) {
+                                    {#这里返回tooltips的显示内容#}
+                                    return param.data[2];
+                                },
+                                position: 'top'
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(120, 36, 50, 0.5)',
+                                shadowOffsetY: 2,
+                                color: new echarts.graphic.RadialGradient(0.2, 0.15, 0.1, [{
+                                    offset: 0,
+                                    color: 'rgb(251, 118, 123)'
+                                }, {
+                                    offset: 1,
+                                    color: 'rgb(204, 46, 72)'
+                                }])
+                            }
+                        }
+                    }
+                };
+                echarts_space.setOption(option);
+            }
         });
     </script>
 {% endblock %}
