@@ -130,6 +130,9 @@
                             if (treeNode.id !== 1) {
                                 key = treeNode.value;
                             }
+                            if ("root" === key) {
+                                clearZTree();
+                            }
                             var wss = wsurl + "&key=" + key;
                             startWebSocket(wss);
                         }
@@ -142,6 +145,11 @@
             ];
 
             var zTreeObj = $.fn.zTree.init($('#id_ul_tree'), setting, zNodes);
+
+            function clearZTree() {
+                var node = zTreeObj.getNodeByTId("1");
+                zTreeObj.removeChildNodes(node);
+            }
 
             $('.table').DataTable({
                 'deferRender': true,
@@ -164,6 +172,7 @@
                 } else {
                     var data = JSON.parse(select_component);
                     wsurl = data["wsurl"];
+                    clearZTree();
                 }
             });
 
