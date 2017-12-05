@@ -7,9 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import get_template
 
-import Define
-from Common import SpaceViews
-from MachinesMgr import machinesmgr
+from Common import SpaceViews,Define
+from Common.MachinesMgr import machinesmgr
 from dwebsocket import accept_websocket
 
 VALID_CT = {

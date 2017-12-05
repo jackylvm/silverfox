@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import get_template
 
-import Define
-from MachinesMgr import machinesmgr
+from Common import Define
+from Common.MachinesMgr import machinesmgr
 from WebConsole.common.telnet_console import ProfileConsole
 from dwebsocket import accept_websocket
 
