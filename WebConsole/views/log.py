@@ -8,7 +8,7 @@ from django.template.loader import get_template
 from Common import Define
 from Common.LoggerWatcher import LoggerWatcher
 from Common.MachinesMgr import machinesmgr
-from plugins.dwebsocket import accept_websocket
+from Plugins.dwebsocket import accept_websocket
 
 
 @login_required

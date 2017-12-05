@@ -1,7 +1,7 @@
 import logging
 import socket
 
-from plugins.dwebsocket import factory
+from Plugins.dwebsocket import factory
 from .protocols import get_websocket_protocol
 from .websocket import DefaultWebSocket
 

@@ -11,7 +11,7 @@ from django.template.loader import get_template
 
 from Common import Component_Status,Define
 from Common.MachinesMgr import machinesmgr
-from plugins.dwebsocket import accept_websocket
+from Plugins.dwebsocket import accept_websocket
 
 VALID_CT = [
     Define.BASEAPPMGR_TYPE,

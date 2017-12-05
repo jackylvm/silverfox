@@ -16,8 +16,9 @@ import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# 把plugins目录添加到系统目录里面
-sys.path.append(os.path.join(BASE_DIR, 'plugins'))
+# 把Plugins,Common目录添加到系统目录里面
+sys.path.append(os.path.join(BASE_DIR, 'Plugins'))
+sys.path.append(os.path.join(BASE_DIR, 'Common'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
