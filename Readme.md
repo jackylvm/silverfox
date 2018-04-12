@@ -1,6 +1,10 @@
 ## SilverFox(银狐),KBEngine后台管理系统 ##
 SilverFox是一个采用[Django](https://www.djangoproject.com/)和基于[Bootstrap](http://v3.bootcss.com/)开发的[Gentelella](https://github.com/puikinsh/gentelella)模板实现的[KBEngine](http://kbengine.org/cn/)服务器后台管理系统.
 
+## 文档
+[SilverFox开发环境配置](https://my.oschina.net/jacky0525/blog/1794792)  
+[SilverFox的介绍](https://my.oschina.net/jacky0525/blog/1794793)
+
 ## 安装 ##
 安装内容请参考项目根目录里面的安装文档(Installer.md)
 
