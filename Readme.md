@@ -22,3 +22,11 @@ SilverFox默认使用SQLite3作为后台数据库,如果需要更改数据库,�
 查看SilverFox.setting.py的MACHINES_ADDRESS配置项的内容是KBEngine启动的服务器IP地址   
 在Pycharm菜单Run里面选择'Run SilverFox',等启动完毕,在浏览器输入http://127.0.0.1:8080/就可以调试SilverFox   
 用户名和密码在登录界面有说明
+
+## 界面
+
+![](https://i.imgur.com/bUah7Rq.png)
+
+![](https://i.imgur.com/pQGGAT2.png)
+
+![](https://i.imgur.com/e6dciUs.png)
